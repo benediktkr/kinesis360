@@ -1,1 +1,10 @@
-[]
+[
+	{
+		"code": "RIGHT_COMMAND",
+		"name": "RIGHT_COMMAND",
+		"params": [
+			"code"
+		],
+		"type": "UD"
+	}
+]

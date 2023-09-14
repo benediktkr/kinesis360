@@ -1,1 +1,19 @@
-[]
+[
+	{
+		"names": [
+			"&kp RIGHT_COMMAND"
+		],
+		"description": "&kp RIGHT_COMMAND",
+		"clarify": false,
+		"documentation": "",
+		"os": {
+			"windows": true,
+			"linux": true,
+			"android": true,
+			"macos": true,
+			"ios": true
+		},
+		"footnotes": {},
+		"type": "UD"
+	}
+]
