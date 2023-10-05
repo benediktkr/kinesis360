@@ -1,5 +1,4 @@
 DOCKER := $(shell { command -v podman || command -v docker; })
-TIMESTAMP := $(shell date -u +"%Y%m%d%H%M%S")
 detected_OS := $(shell uname)  # Classify UNIX OS
 ifeq ($(strip $(detected_OS)),Darwin) #We only care if it's OS X
 SELINUX1 :=
@@ -16,9 +15,9 @@ all:
 	$(DOCKER) run --rm -it --name zmk \
 		-v $(PWD)/firmware:/app/firmware$(SELINUX1) \
 		-v $(PWD)/config:/app/config:ro$(SELINUX2) \
-		-e TIMESTAMP=$(TIMESTAMP) \
 		zmk
 
 clean:
 	rm -f firmware/*.uf2
+	rm -f firmware/Adv360-firmware_*.tar.gz firmware/Adv360-checksums_*.txt
 	$(DOCKER) image rm zmk docker.io/zmkfirmware/zmk-build-arm:stable

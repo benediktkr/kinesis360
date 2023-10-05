@@ -4,13 +4,12 @@ WORKDIR /app
 
 COPY config/west.yml config/west.yml
 
-# West Init
-RUN west init -l config
-# West Update
-RUN west update
-# West Zephyr export
-RUN west zephyr-export
+RUN set -x && \
+    west init -l config && \
+    west update && \
+    west zephyr-export
 
-COPY bin/build.sh ./
+COPY bin/ /usr/local/bin/
 
-CMD ["./build.sh"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+CMD []

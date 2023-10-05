@@ -1,2 +1,6 @@
-/firmware/*.uf2
+.west/
+zephyr/
+modules/
+zmk/
+firmware/*
 .DS_Store
