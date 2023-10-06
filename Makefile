@@ -23,6 +23,7 @@ all:
 	$(DOCKER) run \
 		--rm \
 		--name zmk \
+		-e VERSION="${VERSION}" \
 		-v $(PWD)/firmware:/usr/local/src/firmware$(SELINUX1) \
 		-v $(PWD)/config:/usr/local/src/config:ro$(SELINUX2) \
 		zmk

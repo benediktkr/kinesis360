@@ -18,5 +18,4 @@ tar czf \
     build/right/zephyr/zmk.uf2
 
 
-echo "Wrote '${TARFILE}'."
 

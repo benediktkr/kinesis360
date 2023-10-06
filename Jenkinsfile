@@ -31,7 +31,6 @@ pipeline {
         stage('make') {
             steps {
                 sh "make"
-                sh "tar tf firmware/Adv360-firmware_${VERSION}.tar.gz"
             }
         }
     }
