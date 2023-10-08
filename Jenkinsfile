@@ -41,7 +41,7 @@ pipeline {
                 fingerprint: true
                 )
             withCredentials([string(credentialsId: "gitea-user-ben-full-token", variable: 'GITEA_SECRET')]) {
-                sh 'curl -u ben:$GITEA_TOKEN --upload-file firmware/Adv360_${VERSION}.tar.gz https://git.sudo.is/api/packages/ben/generic/kinesis360/${VERSION}/Adv360-firmware_${VERSION}.tar.gz'
+                sh 'curl -u ben:$GITEA_TOKEN --upload-file firmware/Adv360-firmware_${VERSION}.tar.gz https://git.sudo.is/api/packages/ben/generic/kinesis360/${VERSION}/Adv360-firmware_${VERSION}.tar.gz'
             }
         }
         always {
