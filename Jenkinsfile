@@ -37,11 +37,11 @@ pipeline {
     post {
         success {
             archiveArtifacts(
-                artifacts: "firmware/Adv360-firmware_${env.VERSION}.tar.gz,firmware/Adv360-checksums_${VERSION}.txt",
+                artifacts: "firmware/Adv360-firmware_${env.VERSION}.tar.gz,firmware/*.sha256.txt",
                 fingerprint: true
                 )
             withCredentials([string(credentialsId: "gitea-user-ben-full-token", variable: 'GITEA_SECRET')]) {
-                sh 'curl -u ben:$GITEA_TOKEN --upload-file firmware/Adv360-firmware_${VERSION}.tar.gz https://git.sudo.is/api/packages/ben/generic/kinesis360/${VERSION}/Adv360-firmware_${VERSION}.tar.gz'
+                sh 'curl -s -i -f -H "Authorization: token $GITEA_SECRET" --upload-file firmware/Adv360-firmware_${VERSION}.tar.gz https://git.sudo.is/api/packages/ben/generic/kinesis360/${VERSION}/Adv360-firmware_${VERSION}.tar.gz'
             }
         }
         always {

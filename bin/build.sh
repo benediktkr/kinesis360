@@ -18,4 +18,4 @@ tar czf \
     build/right/zephyr/zmk.uf2
 
 
-
+sha256sum firmware/${TARFILE} > firmware/${TARFILE}.sha256.txt
