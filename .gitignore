@@ -3,4 +3,7 @@ zephyr/
 modules/
 zmk/
 firmware/*
+dist/
+target/
+Adv360-Pro-KeymapEditor/
 .DS_Store
