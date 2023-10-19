@@ -87,15 +87,5 @@
             >;
         };
 
-        layer_CMD_CTRL_MACRO {
-            bindings = <
- &trans  &trans            &trans            &trans            &trans  &macro_command_t            &trans                                                  &trans  &trans  &trans  &trans  &trans  &trans  &trans
- &trans  &trans            &trans            &trans            &trans            &trans            &trans                                                  &trans  &trans  &trans  &trans  &trans  &trans  &trans
- &trans  &trans            &trans            &trans            &trans            &trans            &trans  &trans  &trans                  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans  &trans
- &trans  &trans  &macro_command_x  &macro_command_c  &macro_command_v            &trans                            &trans                  &trans                  &trans  &trans  &trans  &trans  &trans  &trans
- &trans  &trans            &trans            &trans            &trans                              &trans  &trans  &trans                  &trans  &trans  &trans          &trans  &trans  &trans  &trans  &trans
-            >;
-        };
-
     };
 };
