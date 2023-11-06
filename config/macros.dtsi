@@ -1,14 +1,20 @@
-macro_linux_profile1: macro_linux_profile1{
+macro_mac_profile3: macro_mac_profile3{
 compatible = "zmk,behavior-macro";
-label = "macro_linux_profile1";
+label = "macro_mac_profile3";
 #binding-cells = <0>;
-bindings = <&tog 4>, <&bt BT_SEL 0>;
+bindings = <&bt BT_SEL 3>, <&tog 4>;
 };
-macro_mac_profile2: macro_mac_profile2{
+macro_mac_profile1: macro_mac_profile1{
 compatible = "zmk,behavior-macro";
-label = "macro_mac_profile2";
+label = "macro_mac_profile1";
 #binding-cells = <0>;
 bindings = <&bt BT_SEL 1>, <&tog 4>;
+};
+macro_linux_profile0: macro_linux_profile0{
+compatible = "zmk,behavior-macro";
+label = "macro_linux_profile0";
+#binding-cells = <0>;
+bindings = <&tog 4>, <&bt BT_SEL 0>;
 };
 macro_command_v: macro_command_v{
 compatible = "zmk,behavior-macro";
