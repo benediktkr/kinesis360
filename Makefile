@@ -15,11 +15,12 @@ endif
 all:
 	echo "using uid=${USER_UID},gid=${USER_GID} for the build"
 	$(DOCKER) build \
+		 --pull \
 		 --build-arg "USER_UID=${USER_UID}" \
 		 --build-arg "USER_GID=${USER_GID}" \
 		 --tag zmk \
 		 --file Dockerfile .
-	
+
 	$(DOCKER) run \
 		--rm \
 		--name zmk \
