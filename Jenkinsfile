@@ -8,7 +8,7 @@ pipeline {
         disableConcurrentBuilds()
         buildDiscarder(logRotator(daysToKeepStr: '30', numToKeepStr: '10', artifactNumToKeepStr: '1'))
     }
-      environment {
+    environment {
         VENV = "${env.WORKSPACE}@tmp/cache/venv"
         PATH = "${env.VENV}/bin:${HOME}/.local/bin:${PATH}"
     }
