@@ -55,6 +55,10 @@ CONFIG_BT_PERIPHERAL_PREF_TIMEOUT=600
 CONFIG_BT_PERIPHERAL_PREF_MIN_INT=12
 CONFIG_BT_PERIPHERAL_PREF_MAX_INT=24
 CONFIG_BT_PERIPHERAL_PREF_LATENCY=30
+# Battery reporting
+# https://zmk.dev/docs/config/system#bluetooth
+# https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/248/files
+CONFIG_BT_BAS=y
 
 #Misc configuration
 CONFIG_USB_DEVICE_VID=0x29EA
