@@ -4,6 +4,14 @@
 * Forked from: [`KinesisCorporation/Adv360-Pro-ZMK`](https://github.com/KinesisCorporation/Adv360-Pro-ZMK)
 
 
+## Use Tap-Dance
+
+Tap-Dance: https://zmk.dev/docs/behaviors/tap-dance
+
+Both: `tap` `C` -> `C`
+Normal layer: `tap,tap` `C` -> `ctrl C`
+Mac layer:    `tap,tap` `C` -> `cmd C`
+
 ## Modifying the keymap
 
 [The ZMK documentation](https://zmk.dev/docs) covers both basic and advanced functionality and has a table of OS compatibility for keycodes. Please note that the RGB Underglow, Backlight and Power Management sections are not relevant to the Advantage 360 Pro's custom ZMK fork. For more information see [this note](#note)
