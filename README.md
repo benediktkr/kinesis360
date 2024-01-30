@@ -8,9 +8,9 @@
 
 Tap-Dance: https://zmk.dev/docs/behaviors/tap-dance
 
-Both: `tap` `C` -> `C`
-Normal layer: `tap,tap` `C` -> `ctrl C`
-Mac layer:    `tap,tap` `C` -> `cmd C`
+ * Both: `tap` `C` -> `C`
+ * Normal layer: `tap,tap` `C` -> `ctrl C`
+ * Mac layer:    `tap,tap` `C` -> `cmd C`
 
 ## Modifying the keymap
 
