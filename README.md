@@ -4,11 +4,16 @@ Fork of: [`KinesisCorporation/Adv360-Pro-ZMK`](https://github.com/KinesisCorpora
 
 ## Overview
 
+- [ZMK Cheat sheet](https://peccu.github.io/zmk-cheat-sheet/)
+
+## Git repos
+
 |               | Repository
 |:--------------|:---------------
 | `git.sudo.is` | [`ben/kinesis360`](https://git.sudo.is/ben/kinesis360)
 | Codeberg      |  [`benk/kinesis360`](https://codeberg.org/benk/kinesis360)
 | GitHub        | [`benediktkr/kinesis360`](https://github.com/benediktkr/kinesis360)
+
 
 
 ## Use Tap-Dance
