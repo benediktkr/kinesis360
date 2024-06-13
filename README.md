@@ -1,10 +1,17 @@
 # ADV360-PRO-ZMK
 
+* auto-gen TOC;
+{:toc}
+
+## Overview
+
 Fork of: [`KinesisCorporation/Adv360-Pro-ZMK`](https://github.com/KinesisCorporation/Adv360-Pro-ZMK)
 
 ## Overview
 
 - [ZMK Cheat sheet](https://peccu.github.io/zmk-cheat-sheet/)
+- [Advantage 360 Pro User's manual](manuals/manual.pdf)
+- [Quick start guide](manuals/quick_start.pdf)
 
 ## Git repos
 
