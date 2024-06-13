@@ -82,9 +82,9 @@
         layer_mod {
             bindings = <
   &none         &bt BT_SEL 0         &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3  &bt BT_SEL 4                  &none                                                                          &trans   &none       &out OUT_USB       &out OUT_BLE   &none   &none                  &none
-  &none                &none                &none         &none         &none         &none            &bootloader                                                                     &bootloader   &none       &none       &none   &none   &none                  &none
-  &none                &none                &none         &none         &none         &none                  &none   &none   &none                  &bt BT_CLR       &none  &rgb_ug RGB_MEFS_CMD 5   &none       &none       &none   &none   &none                  &none
-  &none                &none                &none         &none         &none         &none                                  &none                       &none                                       &none       &none       &none   &none   &none                  &none
+  &none                &none                &none         &none         &none         &none            &bootloader                                                                     &bootloader   &none       &none              &none          &none   &none                  &none
+  &none                &none                &none         &none         &none         &none                  &none   &none   &none                  &bt BT_CLR       &none  &rgb_ug RGB_MEFS_CMD 5   &none       &none              &none          &none   &none                  &none
+  &none                &none                &none         &none         &none         &none                                  &none                       &none                                       &none       &none              &none          &none   &none                  &none
   &none  &macro_mac_profile1  &macro_mac_profile3         &none         &none                                &none   &none   &none                       &none  &bl BL_TOG         &rgb_ug RGB_TOG          &bl BL_INC  &bl BL_DEC   &none   &none  &macro_linux_profile0
             >;
         };
