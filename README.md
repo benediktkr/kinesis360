@@ -1,10 +1,5 @@
 # ADV360-PRO-ZMK
 
-* auto-gen TOC;
-{:toc}
-
-## Overview
-
 Fork of: [`KinesisCorporation/Adv360-Pro-ZMK`](https://github.com/KinesisCorporation/Adv360-Pro-ZMK)
 
 ## Overview
@@ -13,15 +8,13 @@ Fork of: [`KinesisCorporation/Adv360-Pro-ZMK`](https://github.com/KinesisCorpora
 - [Advantage 360 Pro User's manual](manuals/manual.pdf)
 - [Quick start guide](manuals/quick_start.pdf)
 
-## Git repos
+## Git
 
 |               | Repository
 |:--------------|:---------------
 | `git.sudo.is` | [`ben/kinesis360`](https://git.sudo.is/ben/kinesis360)
 | Codeberg      |  [`benk/kinesis360`](https://codeberg.org/benk/kinesis360)
 | GitHub        | [`benediktkr/kinesis360`](https://github.com/benediktkr/kinesis360)
-
-
 
 ## Use Tap-Dance
 
