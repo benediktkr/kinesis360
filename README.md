@@ -2,9 +2,13 @@
 
 Fork of: [`KinesisCorporation/Adv360-Pro-ZMK`](https://github.com/KinesisCorporation/Adv360-Pro-ZMK)
 
-* `git.sudo.is`: [`ben/kinesis360`](https://git.sudo.is/ben/kinesis360)
-* Codeberg: [`benk/kinesis360`](https://codeberg.org/benk/kinesis360)
-* GitHub: [`benediktkr/kinesis360`](https://github.com/benediktkr/kinesis360)
+## Overview
+
+|               | Repository
+|:--------------|:---------------
+| `git.sudo.is` | [`ben/kinesis360`](https://git.sudo.is/ben/kinesis360)
+| Codeberg      |  [`benk/kinesis360`](https://codeberg.org/benk/kinesis360)
+| GitHub        | [`benediktkr/kinesis360`](https://github.com/benediktkr/kinesis360)
 
 
 ## Use Tap-Dance
@@ -15,7 +19,9 @@ Tap-Dance: https://zmk.dev/docs/behaviors/tap-dance
  * Normal layer: `tap,tap` `C` -> `ctrl C`
  * Mac layer:    `tap,tap` `C` -> `cmd C`
 
-## Modifying the keymap
+## `KinesisCorporation/Adv360-Pro-ZMK`
+
+### Modifying the keymap
 
 [The ZMK documentation](https://zmk.dev/docs) covers both basic and
 advanced functionality and has a table of OS compatibility for keycodes.
@@ -31,29 +37,29 @@ Certain ZMK features require knowing the exact key positions in the matrix.
 They can be found in both image and text format
 [here](assets/key-positions.md)
 
-## Building the Firmware with GitHub Actions
+### Building the Firmware with GitHub Actions
 
-### Setup
+#### Setup
 
 1. Fork this repo.
 2. Enable GitHub Actions on your fork.
 
-### Build firmware
+#### Build firmware
 
 1. Push a commit to trigger the build.
 2. Download the artifact.
 
-## Building the Firmware in a local container
+### Building the Firmware in a local container
 
-### Setup
+#### Setup
 
-#### Software
+##### Software
 
 * Either Podman or Docker is required, Podman is preferred if both are
   present.
 * Make is also required
 
-#### Windows specific
+##### Windows specific
 
 * If compiling on Windows use WSL2 and Docker [Docker Setup
   Guide](https://docs.docker.com/desktop/windows/wsl/).
@@ -62,24 +68,24 @@ They can be found in both image and text format
   through the C: mount point WSL provides by default
   (`/mnt/c/path-to-repo`).
 
-### Build firmware
+#### Build firmware
 
 1. Execute `make`.
 2. Check the `firmware` directory for the latest firmware build.
 
-### Cleanup
+#### Cleanup
 
 The built docker container and compiled firmware files can be deleted with
 `make clean`. This might be necessary if you updated your fork from V2.0 to
 V3.0 and are encountering build failures
 
-## Flashing firmware
+### Flashing firmware
 
 Follow the programming instruction on page 8 of the [Quick Start
 Guide](https://kinesis-ergo.com/wp-content/uploads/Advantage360-Professional-QSG-v8-25-22.pdf)
 to flash the firmware.
 
-### Overview
+#### Overview
 
 1. Extract the firmwares from the downloaded archive.
 1. Connect the left side keyboard to USB.
@@ -101,7 +107,7 @@ to flash the firmware.
 > described in section 2.7 on page 9 in the [User Manual](https://kinesis-ergo.com/wp-content/uploads/Advantage360-ZMK-KB360-PRO-Users-Manual-v3-10-23.pdf)
 > and use is described in section 5.9 on page 14.
 
-### Upgrading from V2 to V3
+#### Upgrading from V2 to V3
 
 If you are upgrading from V2 to V3, and if the flashing didn't work as
 expected (i.e. if you are unable to pair the keyboard via Bluetooth), then
@@ -110,12 +116,12 @@ both halves of the keyboard to its native state. Make sure to use the
 `settings-reset.uf2` file from the V3 branch of this repository. After
 doing this, proceed with the flashing instructions above.
 
-## Changelog
+### Changelog
 
 The changelog for both the config repo and the underlying ZMK fork that the
 config repo builds against can be found [here](CHANGELOG.md)
 
-## Note
+### Note
 
 By default this config repository references [a customised version of ZMK](https://github.com/ReFil/zmk/tree/adv360-z3.2)
 with Advantage 360 Pro specific functionality and changes over [base ZMK](https://github.com/zmkfirmware/zmk).
@@ -128,7 +134,7 @@ service for usage of base ZMK. Likewise the ZMK community cannot provide
 support for either the Kinesis keymap editor, nor any usage of the Kinesis
 custom fork.
 
-## Other support
+### Other support
 
 Further support resources can be found on Kinesis.com:
 
