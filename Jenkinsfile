@@ -16,11 +16,11 @@ pipeline {
         stage('checkout') {
             steps {
                 script {
-                    sh "git remote add github https://www.github.com/benediktkr/kinesis360"
-                    sh "git pull --rebase github main"
-                    sh "git config --global color.ui true"
-                    sh "git --no-pager log HEAD^..HEAD"
-                    //sh "git push origin main"
+                    // sh "git remote add github https://www.github.com/benediktkr/kinesis360"
+                    // sh "git pull --rebase github main"
+                    // sh "git config --global color.ui true"
+                    // sh "git --no-pager log HEAD^..HEAD"
+                    // sh "git push origin main"
                     env.VERSION = sh(script: "date -I", returnStdout: true).trim().replace("-",".")
                     currentBuild.description = env.VERSION
                     sh "ls --color=always -l"
