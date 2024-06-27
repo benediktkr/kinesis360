@@ -1,5 +1,12 @@
 # ADV360-PRO-ZMK
 
+[![Build Status](https://jenkins.sudo.is/buildStatus/icon?job=ben%2Fkinesis360%2Fmain&style=flat-square)](https://jenkins.sudo.is/job/ben/job/kinesis360/job/main/)
+[![version](https://jenkins.sudo.is/buildStatus/icon?job=ben%2Fkinesis360%2Fmain&style=flat-square&status=%24%7Bdescription%7D&subject=version&build=lastStable&color=blue)](https://git.sudo.is/ben/kinesis360/packages)
+[![codeberg](https://www.sudo.is/readmes/codeberg.svg)](https://codeberg.org/ben/kinesis360)
+[![git](https://www.sudo.is/readmes/git.sudo.is-ben.svg)](https://git.sudo.is/ben/kinesis360)
+[![github](https://www.sudo.is/readmes/github-benediktkr.svg)](https://github.com/benediktkr/kinesis360)
+[![matrix](https://www.sudo.is/readmes/matrix-ben-sudo.is.svg)](https://matrix.to/#/@ben:sudo.is)
+
 Fork of: [`KinesisCorporation/Adv360-Pro-ZMK`](https://github.com/KinesisCorporation/Adv360-Pro-ZMK)
 
 ## Overview
@@ -13,7 +20,7 @@ Fork of: [`KinesisCorporation/Adv360-Pro-ZMK`](https://github.com/KinesisCorpora
 |               | Repository
 |:--------------|:---------------
 | `git.sudo.is` | [`ben/kinesis360`](https://git.sudo.is/ben/kinesis360)
-| Codeberg      |  [`benk/kinesis360`](https://codeberg.org/benk/kinesis360)
+| Codeberg      | [`benk/kinesis360`](https://codeberg.org/benk/kinesis360)
 | GitHub        | [`benediktkr/kinesis360`](https://github.com/benediktkr/kinesis360)
 
 ## Use Tap-Dance
@@ -24,7 +31,7 @@ Tap-Dance: https://zmk.dev/docs/behaviors/tap-dance
  * Normal layer: `tap,tap` `C` -> `ctrl C`
  * Mac layer:    `tap,tap` `C` -> `cmd C`
 
-## `KinesisCorporation/Adv360-Pro-ZMK`
+## [KinesisCorporation/Adv360-Pro-ZMK](https://github.com/KinesisCorporation/Adv360-Pro-ZMK) `README.md`
 
 ### Modifying the keymap
 
