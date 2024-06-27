@@ -12,6 +12,11 @@
 The repo forked [`KinesisCorporation/Adv360-Pro-ZMK`](https://github.com/KinesisCorporation/Adv360-Pro-ZMK)
 at 45fca6f6010b50cec3e7f8df4fe4af4bad1e470e.
 
+Manuals for Kinesis Advantage 360 Pro:
+
+- [User's manual](manuals/manual.pdf)
+- [Quick start guide](manuals/quick_starrt.pdf)
+
 See [`UPSTREAM.md`](UPSTREAM.md) for original `README.md` file.
 
 ## Git
@@ -57,6 +62,19 @@ $ git diff $fork --no-prefix --patch -- config/ > config-since-fork.patch
 
 The `config-since-fork.patch` file has the actual config changes, but the
 full `since-fork.patch` is kept for completeness.
+
+## Builds
+
+The default GitHub actions have been disabled and replaced with a [`Jenkinsfile`](Jenkinsfile)
+and the [`Dockerfile`](Dockerfile) has been rewritten and improved.
+
+To build the firmware:
+
+```console
+$ make
+```
+
+The `left.uf2` and `right.uf2` files are in a tarball `firmware/Adv360-firmware_${env.VERSION}.tar.gz`.
 
 ## Use Tap-Dance
 
