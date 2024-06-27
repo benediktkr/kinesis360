@@ -41,7 +41,7 @@ In `.git/config` it looks like:
         merge = refs/heads/V3.0
 ```
 
-There are a cuple of `.patch` files taken with `git diff`:
+There are a couple of `.patch` files taken with `git diff`:
 
 - [`since-fork.patch`](since-fork.patch): All changes since the work
 - [`config-since-fork.patch`](config-since-fork.patch): Changes in `config` since the fork
