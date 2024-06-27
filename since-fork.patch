@@ -1,0 +1,938 @@
+diff --git .github/pull_request_template.md .github/pull_request_template.md
+new file mode 100644
+index 0000000..d7db1bb
+--- /dev/null
++++ .github/pull_request_template.md
+@@ -0,0 +1,8 @@
++## Advantage 360 Pro PR template
++
++### What's changed:
++
++### Why has this change been implemented:
++
++### What (if any) actions must a user take after this change:
++
+diff --git .github/workflows/build.yml .github/workflows/build.yml
+index 2ef9451..353692d 100644
+--- .github/workflows/build.yml
++++ .github/workflows/build.yml
+@@ -10,9 +10,18 @@ jobs:
+     name: Build
+     steps:
+       - name: Checkout
+-        uses: actions/checkout@v3
++        uses: actions/checkout@v4
++      - name: Get version data
++        id: get_info
++        run: |
++          timestamp=$(date +"%Y%m%d%H%M")
++          commit=$(echo "${{ github.sha }}" | cut -c1-7)
++          file_prefix=$timestamp-$commit
++          branch_name=$(echo "${{ github.ref }}" | awk -F'/' '{print $3}' | cut -c1-4)
++          echo "file_prefix=$file_prefix" >> $GITHUB_OUTPUT
++          bin/get_version.sh $branch_name $commit
+       - name: Cache west modules
+-        uses: actions/cache@v3
++        uses: actions/cache@v4
+         env:
+           cache-name: cache-zephyr-modules
+         with:
+@@ -36,17 +45,17 @@ jobs:
+       - name: West Build (left)
+         run: west build -s zmk/app -d build/left -b adv360_left -- -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
+       - name: Adv360 Left Kconfig file
+-        run: cat build/left/zephyr/.config | grep -v "^#" | grep -v "^$"
++        run: grep -vE '(^#|^$)' build/left/zephyr/.config
+       - name: West Build (right)
+         run: west build -s zmk/app -d build/right -b adv360_right -- -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
+       - name: Adv360 Right Kconfig file
+-        run: cat build/right/zephyr/.config | grep -v "^#" | grep -v "^$"
++        run: grep -vE '(^#|^$)' build/right/zephyr/.config
+       - name: Rename zmk.uf2
+-        run: cp build/left/zephyr/zmk.uf2 left.uf2 && cp build/right/zephyr/zmk.uf2 right.uf2
++        run: cp build/left/zephyr/zmk.uf2 ${{ steps.get_info.outputs.file_prefix }}-left.uf2 && cp build/right/zephyr/zmk.uf2 ${{ steps.get_info.outputs.file_prefix }}-right.uf2
+       - name: Archive (Adv360)
+-        uses: actions/upload-artifact@v3
++        uses: actions/upload-artifact@v4
+         with:
+           name: firmware
+           path: |
+-            left.uf2
+-            right.uf2
++            ${{ steps.get_info.outputs.file_prefix }}-left.uf2
++            ${{ steps.get_info.outputs.file_prefix }}-right.uf2
+diff --git CHANGELOG.md CHANGELOG.md
+index 7cda150..14b7e8f 100644
+--- CHANGELOG.md
++++ CHANGELOG.md
+@@ -1,115 +1,211 @@
+ # Changelog
+-Here's all notable changes and commits to both the configuration repo and the base ZMK that the config repo builds against. 
++Here's all notable changes and commits to both the configuration repo and the base ZMK that the config repo builds against.
+ 
+ Many thanks to all those who have submitted issues and pull requests to make this firmware better!
+ ## Config repo
+ 
+-28/7/2023 - Add a section in README explaining how to resolve connectivity issues after updating [#197](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/197)
++4/16/2024 - Fix changelog dates [#448](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/448)
+ 
+-### 6/7/2023 - V3.0 - Major refactor to board definition to match the upstream PR and comply with ZMK pre-commit requirements, Final changes to key matrix in hope of avoiding any future git conflicts, switch to zephyr Pinctrl API, Update the settings-reset file, switch to the zephyr 3.2 branch of the base ZMK repo, add instructions to resolve the conflicts upon updating (adv360-z3.2)
++4/15/2024 - Remove redundant info from documentation [#445](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/445)
+ 
+-7/4/2023 - README improvements, adding instructions on flashing, links to the GUI editor and formatting cleanup [#128](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/128)
++4/7/2024 - Add documentation for new layer colors, and configurable modifier indicator color [#431](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/431)
+ 
+-4/3/2023 - Add extra keys into matrix that point to nowhere, fixes spurious keypress issues when using USB3.1 cables [#114](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/114) [#116](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/116)
++4/5/2024 - Update base ZMK, remove deprecated attributes, change flashing cmake [#424](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/424)
+ 
++3/14/2024 - Fix Makefile errors that prevent builds on macOS [#409](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/409)
+ 
+-14/2/2023 - Disable ZMK logging by default to improve power consumption [#101](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/101)
++2/18/2024 - Fix version.dtsi reset after build when running local builds [#385](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/385)
+ 
+-25/1/2023 - Fix automatic OS detection to build properly when using the local builder on OS-X [#91](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/91)
++2/12/2024 - Update GitHub build workflow to use the latest actions [#376](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/376)
+ 
+-16/1/2023 - Change formatting of keymap GUI files [#92](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/92)
++2/2/2024 - Makefile enhancements (build left side firmware only, separate clean targets for firmware and docker, reset of version.dtsi after build) [#363](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/363)
+ 
+-21/11/2022 - Rewrite README to take into account new makefile structure [#57](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/57)
++1/16/2024 - Change the makefile to fis WSL2 compatibility [#335](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/335)
+ 
+-18/11/2022 - Add SELinux support to the makefile build sequence [#58](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/58)
++1/14/2024 - Update base ZMK, change KConfig attributes to support, Enable experimental BLE features for improved stability [#326](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/326)
+ 
+-14/11/2022 - Makefile cleanup to delete docker images on clean and run more seamlessly [#42](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/42)
++12/27/2023 - Change how the characters are used in the versioning script for improved MacOS experience [#303](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/303)
+ 
+-30/10/2022 - Improve make clean so that it doesn't error when run without build firmware [#36](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/36)
++12/15/2022 - Update keymap.json to reflect new versioning macro [#300](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/300)
+ 
+-26/10/2022 - Add support for building through podman as opposed to docker [#10](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/10)
++12/15/2023 - Add PR template [#293](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/293)
+ 
+-23/10/2022 - Update GitHub actions to avoid deprecated actions [#33](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/33)
++12/6/2023 - Update versioning script to use bash from $PATH [#287](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/287)
+ 
+-23/10/2022 - Add a makefile to reuse the docker image every time [#29](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/29)
++12/5/2023 - Update Bluetooth settings in light of user feedback [#289](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/289)
+ 
+-20/10/2022 - Update settings reset file to fully erase peripheral data from the central
++11/16/2023 - Update changelog with base ZMK update [#268](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/268)
+ 
+-12/10/2022 - Fix local docker build after V2.0 update [#25](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/25)
++11/15/2023 - Add and document the new automatic versioning system [#267](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/267)
+ 
+-11/10/2022 - Set manufacturer information over BLE [#28](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/28)
++11/7/2023 - Add and document a new configuration option for extended NKRO ranges [#264](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/264)
+ 
+-9/10/2022 - Cleanup of keymap [#24](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/)
++11/2/2023 - Update the documentation to note the new configuration options, other miscellaneous improvements based on feedback [#260](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/260)
+ 
+-7/10/2022 - Add USB VID, PID and Manufacturer information to config files
++10/30/2023 - Update the [settings_reset.uf2](/settings-reset.uf2) file to improve reset behaviour with the new update
+ 
+-26/9/2022 - Revise local building script to avoid errors after V2.0 update
++10/20/2023 - Disable BLE privacy due to conflict, disable BLE battery reporting, change to point to new ZMK branch with minor update. Please note that due to the minor update the boards will need the [settings_reset.uf2](/settings-reset.uf2) file flashing onto each side prior to updating [#248](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/248) (adv360-z3.2-2)
+ 
+-### 17/9/2022 - V2.0 - Changes to support Zephyr 3 (adv360-z3)
++10/9/2023 - Further documentation refinements, add section on beta testing, document BLE privacy [#241](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/241)
+ 
+-9/8/2022 - Remove extraneous keys from the GUI [#5](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/5)
++10/9/2023 - Change build actions to fix warnings from shellcheck [#242](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/242)
+ 
+-13/6/2022 - Change default keymap, add default macros
++9/7/2023 - Add a changelog to the documentation, document key positions for combos and improve misc other areas of documentation [#221](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/221) [#222](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/222)
+ 
+-23/5/2022 - Add local building with Docker, Add a README [#4](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/4)
++7/28/2023 - Add a section in README explaining how to resolve connectivity issues after updating [#197](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/197)
+ 
+-6/5/2022 - Change LFCLK accuracy for improved reliability [#2](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/2)
++### 7/6/2023 - V3.0 - Major refactor to board definition to match the upstream PR and comply with ZMK pre-commit requirements, Final changes to key matrix in hope of avoiding any future git conflicts, switch to zephyr Pinctrl API, Update the settings-reset file, switch to the zephyr 3.2 branch of the base ZMK repo, add instructions to resolve the conflicts upon updating (adv360-z3.2)
++
++4/7/2023 - README improvements, adding instructions on flashing, links to the GUI editor and formatting cleanup [#128](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/128)
++
++3/4/2023 - Add extra keys into matrix that point to nowhere, fixes spurious keypress issues when using USB3.1 cables [#114](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/114) [#116](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/116)
++
++2/14/2023 - Disable ZMK logging by default to improve power consumption [#101](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/101)
++
++1/25/2023 - Fix automatic OS detection to build properly when using the local builder on OS-X [#91](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/91)
++
++1/16/2023 - Change formatting of keymap GUI files [#92](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/92)
++
++11/21/2022 - Rewrite README to take into account new makefile structure [#57](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/57)
++
++11/18/2022 - Add SELinux support to the makefile build sequence [#58](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/58)
++
++11/14/2022 - Makefile cleanup to delete docker images on clean and run more seamlessly [#42](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/42)
++
++10/30/2022 - Improve make clean so that it doesn't error when run without build firmware [#36](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/36)
++
++10/26/2022 - Add support for building through podman as opposed to docker [#10](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/10)
++
++10/23/2022 - Update GitHub actions to avoid deprecated actions [#33](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/33)
++
++10/23/2022 - Add a makefile to reuse the docker image every time [#29](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/29)
++
++10/20/2022 - Update settings reset file to fully erase peripheral data from the central
++
++10/12/2022 - Fix local docker build after V2.0 update [#25](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/25)
++
++10/11/2022 - Set manufacturer information over BLE [#28](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/28)
++
++10/9/2022 - Cleanup of keymap [#24](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/)
++
++10/7/2022 - Add USB VID, PID and Manufacturer information to config files
++
++9/26/2022 - Revise local building script to avoid errors after V2.0 update
++
++### 9/17/2022 - V2.0 - Changes to support Zephyr 3 (adv360-z3)
++
++8/9/2022 - Remove extraneous keys from the GUI [#5](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/5)
++
++6/13/2022 - Change default keymap, add default macros
++
++5/23/2022 - Add local building with Docker, Add a README [#4](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/4)
++
++5/6/2022 - Change LFCLK accuracy for improved reliability [#2](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/2)
+ 
+ ### 3/3/2022 - V1.0 - Initial config repo release [#1](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/1) (adv360-beta)
+ 
+-1/3/2022 - Initial publication of licence
++3/1/2022 - Initial publication of licence
+ 
+ ## Base ZMK
+ 
+-There have beeen 3 branches of ZMK used for the 360 Pro so far. 
++There have beeen 5 branches of ZMK used for the 360 Pro so far. Beta branches are not changelogged as they are subject to frequent changes and tweaks.
+ 
+ | Branch | Date From | Date To | Config Branch |
+ | -------- | ------- |-------|-----|
+-| [adv360-beta](https://github.com/ReFil/zmk/tree/adv360-beta)   | 1/3/2022 | 17/9/2022 | main (since deleted) |
+-| [adv360-z3](https://github.com/ReFil/zmk/tree/adv360-z3) | 17/9/2022 | 6/7/2023 | [V2.0](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/tree/V2.0) |
+-| [adv360-z3.2](https://github.com/ReFil/zmk/tree/adv360-z3.2) | 6/7/2023 | To date | [V3.0](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/tree/V3.0) |
++| [adv360-beta](https://github.com/ReFil/zmk/tree/adv360-beta)   | 3/1/2022 | 9/17/2022 | V1.0 (since deleted) |
++| [adv360-z3](https://github.com/ReFil/zmk/tree/adv360-z3) | 9/17/2022 | 7/6/2023 | V2.0 (since deleted) |
++| [adv360-z3.2](https://github.com/ReFil/zmk/tree/adv360-z3.2) | 7/6/2023 | 20/10/2023 | [V3.0](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/tree/V3.0) (Up to commit 82494e7) |
++| [adv360-z3.2-2](https://github.com/ReFil/zmk/tree/adv360-z3.2-2) | 20/10/2023 | 1/14/2024 | [V3.0](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/tree/V3.0) (Up to commit 4a5003a) |
++| [adv360-z3.2-3](https://github.com/ReFil/zmk/tree/adv360-z3.2-3) | 1/14/2024 | 4/5/2024 | [V3.0](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/tree/V3.0) (Up to commit 742d19e) |
++| [adv360-z3.5](https://github.com/ReFil/zmk/tree/adv360-z3.5) | 4/5/2024 | To date | [V3.0](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/tree/V3.0) (Current) |
++
++### adv360-z3.5
++
++4/15/2024 - Clarify list of available BT profile colors [#20](https://github.com/ReFil/zmk/pull/20), fix CI for pulls [#21](https://github.com/ReFil/zmk/pull/21) (Commit b0c91d3)
++
++4/10/2024 - Add colors for all 32 layers [#18](https://github.com/ReFil/zmk/pull/18), enable configuration of modifier indicator color [#19](https://github.com/ReFil/zmk/pull/19), fix battery level display [#17](https://github.com/ReFil/zmk/pull/17) (Commit 2fcd15d)
++
++4/8/2024 - Refactor CI to target 360 Pro exclusively
++
++4/8/2024 - Fix CI failures
++
++3/27/2024 - Update ZMK event to new format
++
++3/27/2024 - Rebase off latest upstream ZMK (Commit 94c3b9a)
++
++### adv360-z3.2-3
++
++1/8/2023 - Merge latest upstream ZMK (Commit 7652fbeb)
++
++12/17/2023 - Add KConfig line to ensure compatibility with previous NKRO extended report is maintained
++
++12/17/2023 - Fix conflicts with upstream HID indicators code for split communication
++
++12/17/2023 - Add defines for HID indicator LEDs to maintain compatibility with lighting code
++
++12/17/2023 - Merge latest upstream ZMK (Commit 78fa1e77)
++
++Note: Several features that used to be custom to this branch (BT battery reporting disable, Extended NKRO, HID Indicators) are now upstream
++
++### adv360-z3.2-2
++
++11/16/2023 - Fix race condition in the bluetooth code causing issues with split connectivity
++
++11/7/2023 - Put HID max NKRO usage on a config option for compatibility (`CONFIG_ZMK_HID_KEYBOARD_EXTENDED_REPORT`)
++
++11/1/2023 - Increase behaviour queue size to permit longer macro sequences to be run
++
++11/1/2023 - Change order of RGB initialisation to prevent situations where lighting could get stuck in battery reporting mode
++
++10/27/2023 - Change HID max NKRO usage to allow usage of F13-F24 and other rarely used keycodes with NKRO enabled
++
++10/18/2023 - Disable saving certain RGB elements to flash memory to help with flash wear
++
++10/18/2023 - Re-enable BLE battery reporting in code (now disabled in config repo using the `CONFIG_BT_BAS` KConfig option)
++
++10/18/2023 - Merge latest upstream ZMK (Commit 7fe9ecd8)
+ 
+ ### adv360-z3.2
+ 
+-31/7/2023 - Fix broken CI builds [#6](https://github.com/ReFil/zmk/pull/6)
++7/31/2023 - Fix broken CI builds [#6](https://github.com/ReFil/zmk/pull/6)
+ 
+-30/5/2023 - Update RGB indicators code to match latest changes from pull requests
++5/30/2023 - Update RGB indicators code to match latest changes from pull requests
+ 
+-30/5/2023 - Merge latest HID indicators pull request alongside dependencies [#999](https://github.com/zmkfirmware/zmk/pull/999) [#1803](https://github.com/zmkfirmware/zmk/pull/1803)
++5/30/2023 - Merge latest HID indicators pull request alongside dependencies [#999](https://github.com/zmkfirmware/zmk/pull/999) [#1803](https://github.com/zmkfirmware/zmk/pull/1803)
+ 
+-30/5/2023 - Disable BLE battery reporting due to unreliability
++5/30/2023 - Disable BLE battery reporting due to unreliability
+ 
+-30/5/2023 - Various fixes to allow compilation on zephyr 3.2
++5/30/2023 - Various fixes to allow compilation on zephyr 3.2
+ 
+-29/5/2023 - Merge latest upstream ZMK (Commit b276a3b)
++5/29/2023 - Merge latest upstream ZMK (Commit b276a3b)
+ 
+ ### adv360-z3
+ 
+-27/3/2023 - Fix power on behaviour for RGB lighting
++3/27/2023 - Fix power on behaviour for RGB lighting
+ 
+-24/2/2023 - Fix indication leds for BLE profile 5
++2/24/2023 - Fix indication leds for BLE profile 5
+ 
+-12/1/2023 - Merge latest upstream ZMK (Commit a82a0ec)
++1/12/2023 - Merge latest upstream ZMK (Commit a82a0ec)
+ 
+-12/1/2023 - Fix pre-commit formatting
++1/12/2023 - Fix pre-commit formatting
+ 
+-12/1/2023 - Fix a compile time warning by defining struct in header [#4](https://github.com/ReFil/zmk/pull/4)
++1/12/2023 - Fix a compile time warning by defining struct in header [#4](https://github.com/ReFil/zmk/pull/4)
+ 
+-25/11/2022 - Add extra BLE characteristic to fix HID light reporting on MacOS
++11/25/2022 - Add extra BLE characteristic to fix HID light reporting on MacOS
+ 
+-19/10/2022 - Add BLE whitelist scanning to improve performance in environments with many BLE devices
++10/19/2022 - Add BLE whitelist scanning to improve performance in environments with many BLE devices
+ 
+-19/10/2022 - Merge latest upstream ZMK (Commit c9eb631)
++10/19/2022 - Merge latest upstream ZMK (Commit c9eb631)
+ 
+-19/10/2022 - Fix initial power on lighting
++10/19/2022 - Fix initial power on lighting
+ 
+-2/10/2022 - Add ability to scale RGB and backlight brightness to improve battery life
++10/2/2022 - Add ability to scale RGB and backlight brightness to improve battery life
+ 
+-13/9/2022 - Add custom lighting functionality on top of base ZMK 
++9/13/2022 - Add custom lighting functionality on top of base ZMK
+ 
+-12/9/2022 - Merge HID indicators pull request [#999](https://github.com/zmkfirmware/zmk/pull/999) atop of base ZMK
++9/12/2022 - Merge HID indicators pull request [#999](https://github.com/zmkfirmware/zmk/pull/999) atop of base ZMK
+ 
+-11/9/2022 - Diverge from base ZMK (Commit 6124d25)
++9/11/2022 - Diverge from base ZMK (Commit 6124d25)
+ 
+ 
+ ### adv360-beta
+diff --git Makefile Makefile
+index 7e95cb8..0598579 100644
+--- Makefile
++++ Makefile
+@@ -1,7 +1,7 @@
+ DOCKER := $(shell { command -v podman || command -v docker; })
+-TIMESTAMP := $(shell date -u +"%Y%m%d%H%M%S")
+-detected_OS := $(shell uname)  # Classify UNIX OS
+-ifeq ($(strip $(detected_OS)),Darwin) #We only care if it's OS X
++TIMESTAMP := $(shell date -u +"%Y%m%d%H%M")
++COMMIT := $(shell git rev-parse --short HEAD 2>/dev/null)
++ifeq ($(shell uname),Darwin)
+ SELINUX1 :=
+ SELINUX2 :=
+ else
+@@ -9,16 +9,36 @@ SELINUX1 := :z
+ SELINUX2 := ,z
+ endif
+ 
+-.PHONY: all clean
++.PHONY: all left clean_firmware clean_image clean
+ 
+ all:
++	$(shell bin/get_version.sh >> /dev/null)
+ 	$(DOCKER) build --tag zmk --file Dockerfile .
+ 	$(DOCKER) run --rm -it --name zmk \
+ 		-v $(PWD)/firmware:/app/firmware$(SELINUX1) \
+ 		-v $(PWD)/config:/app/config:ro$(SELINUX2) \
+ 		-e TIMESTAMP=$(TIMESTAMP) \
++		-e COMMIT=$(COMMIT) \
++		-e BUILD_RIGHT=true \
+ 		zmk
++	git checkout config/version.dtsi
+ 
+-clean:
++left:
++	$(shell bin/get_version.sh >> /dev/null)
++	$(DOCKER) build --tag zmk --file Dockerfile .
++	$(DOCKER) run --rm -it --name zmk \
++		-v $(PWD)/firmware:/app/firmware$(SELINUX1) \
++		-v $(PWD)/config:/app/config:ro$(SELINUX2) \
++		-e TIMESTAMP=$(TIMESTAMP) \
++		-e COMMIT=$(COMMIT) \
++		-e BUILD_RIGHT=false \
++		zmk
++	git checkout config/version.dtsi
++
++clean_firmware:
+ 	rm -f firmware/*.uf2
++
++clean_image:
+ 	$(DOCKER) image rm zmk docker.io/zmkfirmware/zmk-build-arm:stable
++
++clean: clean_firmware clean_image
+diff --git README.md README.md
+index c0c3885..026da20 100644
+--- README.md
++++ README.md
+@@ -1,12 +1,12 @@
+-# ADV360-PRO-ZMK
++# Kinesis Advantage 360 Pro ZMK Config
+ 
+ ## Modifying the keymap
+ 
+ [The ZMK documentation](https://zmk.dev/docs) covers both basic and advanced functionality and has a table of OS compatibility for keycodes. Please note that the RGB Underglow, Backlight and Power Management sections are not relevant to the Advantage 360 Pro's custom ZMK fork. For more information see [this note](#note)
+ 
+-There is a GUI for editing the keymap. It is available at https://kinesiscorporation.github.io/Adv360-Pro-GUI. This repository is also compatible with certain other web based ZMK keymap editors.
++There is a web based GUI available for editing the keymap. It is available at https://kinesiscorporation.github.io/Adv360-Pro-GUI. This repository is also compatible with certain other web based ZMK keymap editors however they may have keycodes or behaviours that are not implemented on the 360 Pro and could cause unusual behaviour or build failures. Furthermore changes made on other keymap editors may not be compatible if one goes back to using the Kinesis GUI.
+ 
+-Certain ZMK features require knowing the exact key positions in the matrix. They can be found in both image and text format [here](assets/key-positions.md)
++Certain ZMK features (e.g. combos) require knowing the exact key positions in the matrix. They can be found in both image and text format [here](assets/key-positions.md)
+ 
+ ## Building the Firmware with GitHub Actions
+ 
+@@ -26,23 +26,47 @@ Certain ZMK features require knowing the exact key positions in the matrix. They
+ 
+ #### Software
+ 
+-* Either Podman or Docker is required, Podman is preferred if both are present.
++* Either Podman or Docker is required, Podman is chosen if both are installed.
+ * Make is also required
+ 
+ #### Windows specific
+ 
+ * If compiling on Windows use WSL2 and Docker [Docker Setup Guide](https://docs.docker.com/desktop/windows/wsl/).
+-* Install make using `sudo apt-get install make`.
++* Install make using `sudo apt-get install make` inside the WSL2 instance.
+ * The repository can be cloned directly into the WSL2 instance or accessed through the C: mount point WSL provides by default (`/mnt/c/path-to-repo`).
+ 
+-### Build firmware
++#### macOS specific
++
++On macOS [brew](https://brew.sh) can be used to install the required components.
++
++* docker
++* [colima](https://github.com/abiosoft/colima) can be used as the docker engine
++
++```shell
++brew install docker colima
++colima start
++```
++> Note: On Apple Silicon (ARM based) systems you need to make sure to start colima with the correct architecture for the container being used.
++> ```
++> colima start --arch x86_64
++> ```
++
++#### Ubuntu/Debian specific
++
++```shell
++sudo apt-get install docker make
++```
++
++### Building the firmware
+ 
+-1. Execute `make`.
+-2. Check the `firmware` directory for the latest firmware build.
++1. Execute `make` to build firmware for both halves or `make left` to only build firmware for the left hand side.
++2. Check the `firmware` directory for the latest firmware build. The first part of the filename is the timestamp when the firmware was built.
+ 
+ ### Cleanup
+ 
+-The built docker container and compiled firmware files can be deleted with `make clean`. This might be necessary if you updated your fork from V2.0 to V3.0 and are encountering build failures
++The built docker container and compiled firmware files can be deleted with `make clean`. This might be necessary if you updated your fork from V2.0 to V3.0 and are encountering build failures.
++
++Creating the docker container takes some time. Therefore `make clean_firmware` can be used to only clean firmware without removing the docker container. Similarly `make clean_image` can be used to remove the docker container without removing compiled firmware files.
+ 
+ ## Flashing firmware
+ 
+@@ -50,7 +74,7 @@ Follow the programming instruction on page 8 of the [Quick Start Guide](https://
+ 
+ ### Overview
+ 
+-1. Extract the firmwares from the downloaded archive.
++1. Extract the firmwares from the archive downloaded from the GitHub build job (If using the cloud builder) or the firmware folder (If building locally).
+ 1. Connect the left side keyboard to USB.
+ 1. Press Mod+macro1 to put the left side into bootloader mode; it should attach to your computer as a USB drive.
+ 1. Copy `left.uf2` to the USB drive and it will disconnect.
+@@ -64,20 +88,62 @@ Follow the programming instruction on page 8 of the [Quick Start Guide](https://
+ 
+ > Note: There are also physical reset buttons on both keyboards which can be used to enter and exit the bootloader mode. Their location is described in section 2.7 on page 9 in the [User Manual](https://kinesis-ergo.com/wp-content/uploads/Advantage360-ZMK-KB360-PRO-Users-Manual-v3-10-23.pdf) and use is described in section 5.9 on page 14. 
+ 
++> Note: Some operating systems wont always treat the drive as ejected after the settings-reset file is flashed or may throw a spurious error, this doesn't mean that the flashing process has failed.
++
+ ### Upgrading from V2 to V3
+ 
+-If you are upgrading from V2 to V3, and if the flashing didn't work as expected (i.e. if you are unable to pair the keyboard via Bluetooth), then consider [resetting](https://kinesis-ergo.com/support/kb360pro/#firmware-updates) both halves of the keyboard to its native state. Make sure to use the `settings-reset.uf2` file from 
+-the V3 branch of this repository. After doing this, proceed with the flashing instructions above.
++If you encounter a git conflict when updating your repository to V3.0 please follow the instructions on how to resolve it [here](UPGRADE.md).
++
++Updating from V2.0 based firmwares to V3.0 based firmwares can be a rather complex process. There are reset files for every major firmware revision as well as documentation on the update process available [here](https://kinesis-ergo.com/support/kb360pro/#firmware-updates).
++
++## Versioning
++
++Starting on 11/15/2023 the Advantage 360 Pro will now automatically record the compilation date, branch and Git commit hash in a macro that can be accessed with Mod+V. This will type out the following string: YYYYMMDD-XXXX-YYYYYY, where XXXX is the first 4 characters of the Git branch and YYYYYY is the Git commit hash. In addition to this the builds compiled by GitHub actions are now timestamped and also record the commit hash in the filename. 
++
++## N-Key Rollover
++
++By default this keyboard has NKRO enabled, however for compatibility reasons the higher ranges are not enabled. If you want to use F13-F24 or the INTL1-9 keys with NKRO enabled you can change `CONFIG_ZMK_HID_KEYBOARD_EXTENDED_REPORT=n` to `CONFIG_ZMK_HID_KEYBOARD_EXTENDED_REPORT=y` in [adv360_left_defconfig](/config/boards/arm/adv360/adv360_left_defconfig#L65)
++
++## Battery reporting
++
++By default reporting the battery level over BLE is disabled as this can cause some computers to spontaneously wake up repeatedly. If you'd like to enable this functionality change `CONFIG_BT_BAS=n` to  `CONFIG_BT_BAS=y` in [adv360_left_defconfig](/config/boards/arm/adv360/adv360_left_defconfig#L58).
++
++## Modifier indicator color
++
++The color of the CAPS/NUM/SCROLL LOCK indicator LEDs may be configured by specifying a hexadecimal RGB color code. For example, `CONFIG_ZMK_RGB_UNDERGLOW_MOD_COLOR=0xFF0000` would give red indicator colors. In order to set the indicator color on both modules, ensure that both [adv360_left_defconfig](/config/boards/arm/adv360/adv360_left_defconfig) and [adv360_right_defconfig](/config/boards/arm/adv360/adv360_right_defconfig) have been updated.
++
++## Layer colors
++
++A total of 32 layers are supported by ZMK, with the highest currently active layer displayed using the layer LEDs on each of the left and right modules. All possible colors are listed below; for the first 8 layers the same color is displayed on both modules. After that, only the right module color will cycle through until "rolling over", which will cause the left module color to change as well (and this then repeats). To avoid confusion, the black/off LED color is only used for layer 0.
++
++| Layer # | L/R | Layer # | L/R | Layer # | L/R | Layer # | L/R |
++| ---: | :---: | ---: | :---: | ---: | :---: | ---: | :---: |
++| 0 | <img valign='middle' src='assets/swatches/000000.svg'/> <img valign='middle' src='assets/swatches/000000.svg'/> | 8 | <img valign='middle' src='assets/swatches/FFFFFF.svg'/> <img valign='middle' src='assets/swatches/0000FF.svg'/> | 16 | <img valign='middle' src='assets/swatches/0000FF.svg'/> <img valign='middle' src='assets/swatches/FF0000.svg'/> | 24 | <img valign='middle' src='assets/swatches/00FF00.svg'/> <img valign='middle' src='assets/swatches/00FFFF.svg'/> |
++| 1 | <img valign='middle' src='assets/swatches/FFFFFF.svg'/> <img valign='middle' src='assets/swatches/FFFFFF.svg'/> | 9 | <img valign='middle' src='assets/swatches/FFFFFF.svg'/> <img valign='middle' src='assets/swatches/00FF00.svg'/> | 17 | <img valign='middle' src='assets/swatches/0000FF.svg'/> <img valign='middle' src='assets/swatches/FF00FF.svg'/> | 25 | <img valign='middle' src='assets/swatches/00FF00.svg'/> <img valign='middle' src='assets/swatches/FFFF00.svg'/> |
++| 2 | <img valign='middle' src='assets/swatches/0000FF.svg'/> <img valign='middle' src='assets/swatches/0000FF.svg'/> | 10 | <img valign='middle' src='assets/swatches/FFFFFF.svg'/> <img valign='middle' src='assets/swatches/FF0000.svg'/> | 18 | <img valign='middle' src='assets/swatches/0000FF.svg'/> <img valign='middle' src='assets/swatches/00FFFF.svg'/> | 26 | <img valign='middle' src='assets/swatches/FF0000.svg'/> <img valign='middle' src='assets/swatches/FFFFFF.svg'/> |
++| 3 | <img valign='middle' src='assets/swatches/00FF00.svg'/> <img valign='middle' src='assets/swatches/00FF00.svg'/> | 11 | <img valign='middle' src='assets/swatches/FFFFFF.svg'/> <img valign='middle' src='assets/swatches/FF00FF.svg'/> | 19 | <img valign='middle' src='assets/swatches/0000FF.svg'/> <img valign='middle' src='assets/swatches/FFFF00.svg'/> | 27 | <img valign='middle' src='assets/swatches/FF0000.svg'/> <img valign='middle' src='assets/swatches/0000FF.svg'/> |
++| 4 | <img valign='middle' src='assets/swatches/FF0000.svg'/> <img valign='middle' src='assets/swatches/FF0000.svg'/> | 12 | <img valign='middle' src='assets/swatches/FFFFFF.svg'/> <img valign='middle' src='assets/swatches/00FFFF.svg'/> | 20 | <img valign='middle' src='assets/swatches/00FF00.svg'/> <img valign='middle' src='assets/swatches/FFFFFF.svg'/> | 28 | <img valign='middle' src='assets/swatches/FF0000.svg'/> <img valign='middle' src='assets/swatches/00FF00.svg'/> |
++| 5 | <img valign='middle' src='assets/swatches/FF00FF.svg'/> <img valign='middle' src='assets/swatches/FF00FF.svg'/> | 13 | <img valign='middle' src='assets/swatches/FFFFFF.svg'/> <img valign='middle' src='assets/swatches/FFFF00.svg'/> | 21 | <img valign='middle' src='assets/swatches/00FF00.svg'/> <img valign='middle' src='assets/swatches/0000FF.svg'/> | 29 | <img valign='middle' src='assets/swatches/FF0000.svg'/> <img valign='middle' src='assets/swatches/FF00FF.svg'/> |
++| 6 | <img valign='middle' src='assets/swatches/00FFFF.svg'/> <img valign='middle' src='assets/swatches/00FFFF.svg'/> | 14 | <img valign='middle' src='assets/swatches/0000FF.svg'/> <img valign='middle' src='assets/swatches/FFFFFF.svg'/> | 22 | <img valign='middle' src='assets/swatches/00FF00.svg'/> <img valign='middle' src='assets/swatches/FF0000.svg'/> | 30 | <img valign='middle' src='assets/swatches/FF0000.svg'/> <img valign='middle' src='assets/swatches/00FFFF.svg'/> |
++| 7 | <img valign='middle' src='assets/swatches/FFFF00.svg'/> <img valign='middle' src='assets/swatches/FFFF00.svg'/> | 15 | <img valign='middle' src='assets/swatches/0000FF.svg'/> <img valign='middle' src='assets/swatches/00FF00.svg'/> | 23 | <img valign='middle' src='assets/swatches/00FF00.svg'/> <img valign='middle' src='assets/swatches/FF00FF.svg'/> | 31 | <img valign='middle' src='assets/swatches/FF0000.svg'/> <img valign='middle' src='assets/swatches/FFFF00.svg'/> |
+ 
+ ## Changelog
+ 
+-The changelog for both the config repo and the underlying ZMK fork that the config repo builds against can be found [here](CHANGELOG.md)
++The changelog for both the config repo and the underlying ZMK fork that the config repo builds against can be found [here](CHANGELOG.md).
++
++## Beta testing
++
++The Advantage 360 Pro is always getting updates and refinements. If you are willing to beta test you can follow [this guide from ZMK](https://zmk.dev/docs/features/beta-testing#testing-features) on how to change where your config repo points to. The `west.yml` file that is mentioned is located in config/. [This link](config/west.yml) can take you to the file. Typically you will only need to change the `revision: ` to match the beta branch. There is currently no beta branch available for testing.
++
++Feedback on beta branches should be submitted as a GitHub issue on the base ZMK repository as opposed to this config repository.
++
++In the event of a major update the beta branch may not be compatible with the current mainline version of the config repository. If this is the case it will be detailed here along with instructions on how to update.
+ 
+ ## Note
+ 
+-By default this config repository references [a customised version of ZMK](https://github.com/ReFil/zmk/tree/adv360-z3.2) with Advantage 360 Pro specific functionality and changes over [base ZMK](https://github.com/zmkfirmware/zmk). The Kinesis fork is regularly updated to bring the latest updates and changes from base ZMK however will not always be completely up to date.
++By default this config repository references [a customised version of ZMK](https://github.com/ReFil/zmk/tree/adv360-z3.5) with Advantage 360 Pro specific functionality and changes over [base ZMK](https://github.com/zmkfirmware/zmk). The Kinesis fork is regularly updated to bring the latest updates and changes from base ZMK however will not always be completely up to date, some features such as new keycodes will not be immediately available on the 360 Pro after they are implemented in base ZMK.
+ 
+-Whilst the Advantage 360 Pro is compatible with base ZMK some of the more advanced features will not work, and Kinesis cannot provide customer service for usage of base ZMK. Likewise the ZMK community cannot provide support for either the Kinesis keymap editor, nor any usage of the Kinesis custom fork.
++Whilst the Advantage 360 Pro is compatible with base ZMK (The pull request to merge it can be seen [here](https://github.com/zmkfirmware/zmk/pull/1454) if you want to see how to implement it) some of the more advanced features (the indicator RGB leds) will not work, and Kinesis cannot provide customer service for usage of base ZMK. Likewise the ZMK community cannot provide support for either the Kinesis keymap editor, nor any usage of the Kinesis custom fork.
+ 
+ ## Other support
+ 
+@@ -85,3 +151,7 @@ Further support resources can be found on Kinesis.com:
+ 
+ * https://kinesis-ergo.com/support/kb360pro/#firmware-updates
+ * https://kinesis-ergo.com/support/kb360pro/#manuals
++
++In the event of a hardware issue it may be necessary to open a support ticket directly with Kinesis as opposed to a GitHub issue in this repository.
++* https://kinesis-ergo.com/support/kb360pro/#ticket
++
+diff --git UPGRADE.md UPGRADE.md
+index 10d5ddf..e3e7cbb 100644
+--- UPGRADE.md
++++ UPGRADE.md
+@@ -35,7 +35,7 @@ This assumes you already have [GitHub desktop](https://desktop.github.com/) down
+     Open keymap.json, and for each layer remove the 8 highlighted &none behaviours including the quotes wrapping them, and the commas
+ 4. Edit adv 360.keymap
+ 
+-    Open adv360.keymap and remove the 8 highlighted &none behaviours in each later
++    Open adv360.keymap and remove the 8 highlighted &none behaviours in each layer
+ 5. Commit your changes
+ 
+     Returning to GitHub desktop you should see the changes you made in the bar on the left. Type an appropriate commit summary and click "Commit to *branch name*"
+@@ -50,7 +50,7 @@ This assumes you already have [GitHub desktop](https://desktop.github.com/) down
+ 
+ 7. Resolve Conflicts
+ 
+-    The conflict resolution window has powerful options to soresolve the merge conflict, you will want to clik on the down arrow next to "Open in *your text editor*" and click use the modified file from *your branch name*. In the case of this example it is called V2.0-beta. Using the file from upstream/V2.0 or upstream/V3.0 will result in none of your keymap changes being preserved. 
++    The conflict resolution window has powerful options to soresolve the merge conflict, you will want to click on the down arrow next to "Open in *your text editor*" and click use the modified file from *your branch name*. In the case of this example it is called V2.0-beta. Using the file from upstream/V2.0 or upstream/V3.0 will result in none of your keymap changes being preserved. 
+     Do this for both files then you will be able to click the "Continue Merge" option
+ 
+     ![The merge dialog showing a warning of conflicts](/assets/conflict.jpg)
+diff --git assets/swatches/000000.svg assets/swatches/000000.svg
+new file mode 100644
+index 0000000..9d14efa
+--- /dev/null
++++ assets/swatches/000000.svg
+@@ -0,0 +1 @@
++<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="22" viewBox="0 0 20 22"><rect fill="#000000" x="0" y="0" width="20" height="20" rx="4"/></svg>
+\ No newline at end of file
+diff --git assets/swatches/0000FF.svg assets/swatches/0000FF.svg
+new file mode 100644
+index 0000000..d445b54
+--- /dev/null
++++ assets/swatches/0000FF.svg
+@@ -0,0 +1 @@
++<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="22" viewBox="0 0 20 22"><rect fill="#0000FF" x="0" y="0" width="20" height="20" rx="4"/></svg>
+\ No newline at end of file
+diff --git assets/swatches/00FF00.svg assets/swatches/00FF00.svg
+new file mode 100644
+index 0000000..f8b4ce0
+--- /dev/null
++++ assets/swatches/00FF00.svg
+@@ -0,0 +1 @@
++<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="22" viewBox="0 0 20 22"><rect fill="#00FF00" x="0" y="0" width="20" height="20" rx="4"/></svg>
+\ No newline at end of file
+diff --git assets/swatches/00FFFF.svg assets/swatches/00FFFF.svg
+new file mode 100644
+index 0000000..4813df5
+--- /dev/null
++++ assets/swatches/00FFFF.svg
+@@ -0,0 +1 @@
++<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="22" viewBox="0 0 20 22"><rect fill="#00FFFF" x="0" y="0" width="20" height="20" rx="4"/></svg>
+\ No newline at end of file
+diff --git assets/swatches/FF0000.svg assets/swatches/FF0000.svg
+new file mode 100644
+index 0000000..3026c7e
+--- /dev/null
++++ assets/swatches/FF0000.svg
+@@ -0,0 +1 @@
++<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="22" viewBox="0 0 20 22"><rect fill="#FF0000" x="0" y="0" width="20" height="20" rx="4"/></svg>
+\ No newline at end of file
+diff --git assets/swatches/FF00FF.svg assets/swatches/FF00FF.svg
+new file mode 100644
+index 0000000..81f6c6a
+--- /dev/null
++++ assets/swatches/FF00FF.svg
+@@ -0,0 +1 @@
++<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="22" viewBox="0 0 20 22"><rect fill="#FF00FF" x="0" y="0" width="20" height="20" rx="4"/></svg>
+\ No newline at end of file
+diff --git assets/swatches/FFFF00.svg assets/swatches/FFFF00.svg
+new file mode 100644
+index 0000000..1fa8992
+--- /dev/null
++++ assets/swatches/FFFF00.svg
+@@ -0,0 +1 @@
++<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="22" viewBox="0 0 20 22"><rect fill="#FFFF00" x="0" y="0" width="20" height="20" rx="4"/></svg>
+\ No newline at end of file
+diff --git assets/swatches/FFFFFF.svg assets/swatches/FFFFFF.svg
+new file mode 100644
+index 0000000..d54a132
+--- /dev/null
++++ assets/swatches/FFFFFF.svg
+@@ -0,0 +1 @@
++<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="22" viewBox="0 0 20 22"><rect fill="#FFFFFF" x="0" y="0" width="20" height="20" rx="4"/></svg>
+\ No newline at end of file
+diff --git bin/build.sh bin/build.sh
+index e783844..bab8570 100755
+--- bin/build.sh
++++ bin/build.sh
+@@ -3,15 +3,22 @@
+ set -eu
+ 
+ PWD=$(pwd)
+-TIMESTAMP="${TIMESTAMP:-$(date -u +"%Y%m%d%H%M%S")}"
++TIMESTAMP="${TIMESTAMP:-$(date -u +"%Y%m%d%H%M")}"
++COMMIT="${COMMIT:-$(echo xxxxxx)}"
+ 
+ # West Build (left)
+ west build -s zmk/app -d build/left -b adv360_left -- -DZMK_CONFIG="${PWD}/config"
+ # Adv360 Left Kconfig file
+-cat build/left/zephyr/.config | grep -v "^#" | grep -v "^$"
+-# West Build (right)
+-west build -s zmk/app -d build/right -b adv360_right -- -DZMK_CONFIG="${PWD}/config"
+-# Adv360 Right Kconfig file
+-cat build/right/zephyr/.config | grep -v "^#" | grep -v "^$"
++grep -vE '(^#|^$)' build/left/zephyr/.config
+ # Rename zmk.uf2
+-cp build/left/zephyr/zmk.uf2 ./firmware/${TIMESTAMP}-left.uf2 && cp build/right/zephyr/zmk.uf2 ./firmware/${TIMESTAMP}-right.uf2
++cp build/left/zephyr/zmk.uf2 "./firmware/${TIMESTAMP}-${COMMIT}-left.uf2"
++
++# Build right side if selected
++if [ "${BUILD_RIGHT}" = true ]; then
++    # West Build (right)
++    west build -s zmk/app -d build/right -b adv360_right -- -DZMK_CONFIG="${PWD}/config"
++    # Adv360 Right Kconfig file
++    grep -vE '(^#|^$)' build/right/zephyr/.config
++    # Rename zmk.uf2
++    cp build/right/zephyr/zmk.uf2 "./firmware/${TIMESTAMP}-${COMMIT}-right.uf2"
++fi
+diff --git bin/get_version.sh bin/get_version.sh
+new file mode 100755
+index 0000000..aa23e17
+--- /dev/null
++++ bin/get_version.sh
+@@ -0,0 +1,64 @@
++#!/usr/bin/env bash
++
++# Get the date, first 4 chars of branch name and short commit hash
++date=$(date -u +"%Y%m%d")
++branch=${1:-$(git rev-parse --abbrev-ref HEAD | cut -c1-4)}
++commit=${2:-$(git rev-parse --short HEAD)}
++
++uppercase_char() {
++    local char=$1
++
++    (echo $char | tr '[a-z]' '[A-Z]' 2> /dev/null) || echo "${char^^}"
++}
++
++# Function to transform characters to ZMK key behaviours
++transform_char() {
++    local char=$1
++
++    if [[ $char =~ [A-Za-z] ]]; then
++        echo "<&kp $(uppercase_char $char)>, "
++    elif [[ $char =~ [0-9] ]]; then
++        echo "<&kp N${char}>, "
++    elif [ "$char" = "." ]; then
++        echo "<&kp DOT>, "
++    fi
++}
++
++# Iterate over the date and format characters
++formatted_date=""
++for ((i = 0; i < ${#date}; i++)); do
++    formatted_date+=$(transform_char "${date:$i:1}")
++done
++
++# Insert separator between date and branch
++formatted_date+="<&kp MINUS>, "
++
++# Iterate over the branch and format characters
++formatted_branch=""
++for ((i = 0; i < ${#branch}; i++)); do
++    formatted_branch+=$(transform_char "${branch:$i:1}")
++done
++
++# Insert separator between branch and commit hash
++formatted_branch+="<&kp MINUS>, "
++
++# Iterate over the commit hash and format characters
++formatted_commit=""
++for ((i = 0; i < ${#commit}; i++)); do
++    formatted_commit+=$(transform_char "${commit:$i:1}")
++done
++
++# Combine the formatted string, add trailing carriage return
++formatted_result="$formatted_date$formatted_branch$formatted_commit"
++formatted_result+="<&kp RET>"
++
++echo $formatted_result
++# Create new macro to define version, overwrite previous one
++
++echo '#define VERSION_MACRO' > "config/version.dtsi"
++echo 'macro_ver: macro_ver {' >> "config/version.dtsi"
++echo 'compatible = "zmk,behavior-macro";' >> "config/version.dtsi"
++echo 'label = "macro_ver";' >> "config/version.dtsi"
++echo '#binding-cells = <0>;' >> "config/version.dtsi"
++echo "bindings = $formatted_result;" >> "config/version.dtsi"
++echo '};' >> "config/version.dtsi"
+diff --git config/adv360.keymap config/adv360.keymap
+index 8ece1db..cf80f15 100644
+--- config/adv360.keymap
++++ config/adv360.keymap
+@@ -7,6 +7,15 @@
+ / {
+     behaviors {
+       #include "macros.dtsi"
++      #include "version.dtsi"
++      #ifndef VERSION_MACRO
++      macro_ver: macro_ver {
++        compatible = "zmk,behavior-macro";
++        label = "macro_version";
++        #binding-cells = <0>;
++        bindings = <&kp RET>;
++      };
++      #endif
+ 
+       hm: homerow_mods {
+           compatible = "zmk,behavior-hold-tap";
+@@ -54,7 +63,7 @@
+         &none &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4 &none                                                                     &trans                 &none        &none        &none        &none &none &none
+         &none &none        &none        &none        &none        &none        &bootloader                                                               &bootloader            &none        &none        &none        &none &none &none
+         &none &none        &none        &none        &none        &none        &none                   &none &none &bt BT_CLR &none                      &rgb_ug RGB_MEFS_CMD 5 &none        &none        &none        &none &none &none
+-        &none &none        &none        &none        &none        &none                                      &none &none                                                        &none        &none        &none        &none &none &none
++        &none &none        &none        &none        &macro_ver   &none                                      &none &none                                                        &none        &none        &none        &none &none &none
+         &none &none        &none        &none        &none                                       &none &none &none &none      &bl BL_TOG &rgb_ug RGB_TOG                                     &bl BL_INC   &bl BL_DEC   &none &none &none
+       >;
+     };
+diff --git config/boards/arm/adv360/Kconfig.defconfig config/boards/arm/adv360/Kconfig.defconfig
+index aa2fb87..7333f89 100644
+--- config/boards/arm/adv360/Kconfig.defconfig
++++ config/boards/arm/adv360/Kconfig.defconfig
+@@ -35,12 +35,6 @@ config SPI
+ config BT_CTLR
+     default BT
+ 
+-config ZMK_BLE
+-    default y
+-
+-config ZMK_USB
+-    default y
+-
+ if USB
+ 
+ config USB_NRFX
+diff --git config/boards/arm/adv360/adv360.dtsi config/boards/arm/adv360/adv360.dtsi
+index 2f221fc..0c85836 100644
+--- config/boards/arm/adv360/adv360.dtsi
++++ config/boards/arm/adv360/adv360.dtsi
+@@ -21,6 +21,7 @@
+         zephyr,code-partition = &code_partition;
+         zephyr,sram = &sram0;
+         zephyr,flash = &flash0;
++        zephyr,console = &cdc_acm_uart;
+         zmk,kscan = &kscan0;
+         zmk,backlight = &backlight;
+         zmk,battery = &vbatt;
+@@ -43,9 +44,8 @@
+ 
+         >;
+     };
+-    ext-power {
++    EXT_POWER {
+             compatible = "zmk,ext-power-generic";
+-            label = "EXT_POWER";
+             control-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
+         };
+ 
+@@ -90,6 +90,9 @@
+ 
+ &usbd {
+     status = "okay";
++    cdc_acm_uart: cdc_acm_uart {
++        compatible = "zephyr,cdc-acm-uart";
++    };
+ };
+ 
+ 
+@@ -104,11 +107,9 @@
+         #size-cells = <1>;
+ 
+         sd_partition: partition@0 {
+-            label = "softdevice";
+             reg = <0x00000000 0x00026000>;
+         };
+         code_partition: partition@26000 {
+-            label = "code_partition";
+             reg = <0x00026000 0x000c6000>;
+         };
+ 
+@@ -122,12 +123,10 @@
+          * if enabled.
+          */
+         storage_partition: partition@ec000 {
+-            label = "storage";
+             reg = <0x000ec000 0x00008000>;
+         };
+ 
+         boot_partition: partition@f4000 {
+-            label = "adafruit_boot";
+             reg = <0x000f4000 0x0000c000>;
+         };
+     };
+@@ -142,7 +141,6 @@
+ 
+     led_strip: ws2812@0 {
+         compatible = "worldsemi,ws2812-spi";
+-        label = "WS2812";
+ 
+         /* SPI */
+         reg = <0>;
+diff --git config/boards/arm/adv360/adv360_left_defconfig config/boards/arm/adv360/adv360_left_defconfig
+index 33ef88e..b37679a 100644
+--- config/boards/arm/adv360/adv360_left_defconfig
++++ config/boards/arm/adv360/adv360_left_defconfig
+@@ -49,17 +49,26 @@ CONFIG_ZMK_BACKLIGHT_AUTO_OFF_IDLE=y
+ #BT configuration
+ CONFIG_BT_CTLR_TX_PWR_PLUS_8=y
+ CONFIG_BT_DIS_MANUF="Kinesis Corporation"
+-CONFIG_BT_PRIVACY=y
+-CONFIG_BT_GAP_PERIPHERAL_PREF_PARAMS=y
+-CONFIG_BT_PERIPHERAL_PREF_TIMEOUT=600
+-CONFIG_BT_PERIPHERAL_PREF_MIN_INT=12
+-CONFIG_BT_PERIPHERAL_PREF_MAX_INT=24
+-CONFIG_BT_PERIPHERAL_PREF_LATENCY=30
++#CONFIG_BT_PRIVACY=n
++#CONFIG_BT_GAP_PERIPHERAL_PREF_PARAMS=y
++#CONFIG_BT_PERIPHERAL_PREF_TIMEOUT=600
++#CONFIG_BT_PERIPHERAL_PREF_MIN_INT=12
++#CONFIG_BT_PERIPHERAL_PREF_MAX_INT=24
++#CONFIG_BT_PERIPHERAL_PREF_LATENCY=30
++CONFIG_BT_BAS=n #Set this to y to enable BLE battery reporting
+ 
+ #Misc configuration
+ CONFIG_USB_DEVICE_VID=0x29EA
+ CONFIG_USB_DEVICE_PID=0x0362
+ CONFIG_USB_DEVICE_MANUFACTURER="Kinesis Corporation"
+ CONFIG_ZMK_HID_REPORT_TYPE_NKRO=y
++CONFIG_ZMK_HID_KEYBOARD_EXTENDED_REPORT=n #Set this to y for F13-F24 and intl keys with NKRO
+ CONFIG_ZMK_HID_CONSUMER_REPORT_USAGES_BASIC=y
+ CONFIG_BUILD_OUTPUT_UF2=y
++
++CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=y
++CONFIG_ZMK_BLE_PASSKEY_ENTRY=n
++
++CONFIG_ZMK_BLE=y
++CONFIG_ZMK_USB=y
++CONFIG_ZMK_HID_INDICATORS=y
+\ No newline at end of file
+diff --git config/boards/arm/adv360/adv360_right_defconfig config/boards/arm/adv360/adv360_right_defconfig
+index f1eb05f..3c2e65a 100644
+--- config/boards/arm/adv360/adv360_right_defconfig
++++ config/boards/arm/adv360/adv360_right_defconfig
+@@ -54,3 +54,8 @@ CONFIG_BT_CTLR_TX_PWR_PLUS_8=y
+ CONFIG_ZMK_HID_REPORT_TYPE_NKRO=y
+ CONFIG_ZMK_HID_CONSUMER_REPORT_USAGES_BASIC=y
+ CONFIG_BUILD_OUTPUT_UF2=y
++
++CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=y
++
++CONFIG_ZMK_BLE=y
++CONFIG_ZMK_USB=y
+diff --git config/boards/arm/adv360/board.cmake config/boards/arm/adv360/board.cmake
+index 3465290..292a274 100644
+--- config/boards/arm/adv360/board.cmake
++++ config/boards/arm/adv360/board.cmake
+@@ -5,5 +5,5 @@
+ 
+ board_runner_args(nrfjprog "--nrf-family=NRF52" "--softreset")
+ 
++include(${ZEPHYR_BASE}/boards/common/uf2.board.cmake)
+ include(${ZEPHYR_BASE}/boards/common/nrfjprog.board.cmake)
+-#include(${ZEPHYR_BASE}/boards/common/blackmagicprobe.board.cmake)
+diff --git config/keymap.json config/keymap.json
+index 86b8982..bd3fa91 100644
+--- config/keymap.json
++++ config/keymap.json
+@@ -31,7 +31,7 @@
+       "&none ", "&bt BT_SEL 0 ", "&bt BT_SEL 1 ", "&bt BT_SEL 2 ", "&bt BT_SEL 3 ", "&bt BT_SEL 4 ", "&none                                                                                        ", "&trans        ", "&none        ", "&none        ", "&none        ", "&none        ", "&none        ", "&none",
+       "&none ", "&none        ", "&none        ", "&none        ", "&none        ", "&none        ", "&bootloader                                                                                  ", "&bootloader   ", "&none        ", "&none        ", "&none        ", "&none        ", "&none        ", "&none",
+       "&none ", "&none        ", "&none        ", "&none        ", "&none        ", "&none        ", "&none                ", "&none", "&none ", "&bt BT_CLR ", "&none ",                             "&rgb_ug RGB_MEFS_CMD 5 ", "&none        ", "&none        ", "&none        ", "&none        ", "&none        ", "&none",
+-      "&none ", "&none        ", "&none        ", "&none        ", "&none        ", "&none                                          ", "&none ", "&none ",                                                              "&none        ", "&none        ", "&none        ", "&none        ", "&none        ", "&none",
++      "&none ", "&none        ", "&none        ", "&none        ", "&macro_ver   ", "&none                                          ", "&none ", "&none ",                                                              "&none        ", "&none        ", "&none        ", "&none        ", "&none        ", "&none",
+       "&none ", "&none        ", "&none        ", "&none        ", "&none                                         ", "&none", "&none", "&none ", "&none      ", "&bl BL_TOG ", "&rgb_ug RGB_TOG                                ", "&bl BL_INC   ", "&bl BL_DEC   ", "&none        ", "&none        ", "&none"
+     ]
+   ]
+diff --git config/version.dtsi config/version.dtsi
+new file mode 100644
+index 0000000..e69de29
+diff --git config/west.yml config/west.yml
+index 3d195d8..9f3a48d 100644
+--- config/west.yml
++++ config/west.yml
+@@ -7,7 +7,7 @@ manifest:
+   projects:
+     - name: zmk
+       remote: refil
+-      revision: adv360-z3.2
++      revision: adv360-z3.5
+       import: app/west.yml
+   self:
+     path: config
+diff --git settings-reset.uf2 settings-reset.uf2
+index f3109d6..4fb2546 100644
+Binary files settings-reset.uf2 and settings-reset.uf2 differ

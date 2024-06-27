@@ -1,0 +1,203 @@
+diff --git config/adv360.keymap config/adv360.keymap
+index 8ece1db..cf80f15 100644
+--- config/adv360.keymap
++++ config/adv360.keymap
+@@ -7,6 +7,15 @@
+ / {
+     behaviors {
+       #include "macros.dtsi"
++      #include "version.dtsi"
++      #ifndef VERSION_MACRO
++      macro_ver: macro_ver {
++        compatible = "zmk,behavior-macro";
++        label = "macro_version";
++        #binding-cells = <0>;
++        bindings = <&kp RET>;
++      };
++      #endif
+ 
+       hm: homerow_mods {
+           compatible = "zmk,behavior-hold-tap";
+@@ -54,7 +63,7 @@
+         &none &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4 &none                                                                     &trans                 &none        &none        &none        &none &none &none
+         &none &none        &none        &none        &none        &none        &bootloader                                                               &bootloader            &none        &none        &none        &none &none &none
+         &none &none        &none        &none        &none        &none        &none                   &none &none &bt BT_CLR &none                      &rgb_ug RGB_MEFS_CMD 5 &none        &none        &none        &none &none &none
+-        &none &none        &none        &none        &none        &none                                      &none &none                                                        &none        &none        &none        &none &none &none
++        &none &none        &none        &none        &macro_ver   &none                                      &none &none                                                        &none        &none        &none        &none &none &none
+         &none &none        &none        &none        &none                                       &none &none &none &none      &bl BL_TOG &rgb_ug RGB_TOG                                     &bl BL_INC   &bl BL_DEC   &none &none &none
+       >;
+     };
+diff --git config/boards/arm/adv360/Kconfig.defconfig config/boards/arm/adv360/Kconfig.defconfig
+index aa2fb87..7333f89 100644
+--- config/boards/arm/adv360/Kconfig.defconfig
++++ config/boards/arm/adv360/Kconfig.defconfig
+@@ -35,12 +35,6 @@ config SPI
+ config BT_CTLR
+     default BT
+ 
+-config ZMK_BLE
+-    default y
+-
+-config ZMK_USB
+-    default y
+-
+ if USB
+ 
+ config USB_NRFX
+diff --git config/boards/arm/adv360/adv360.dtsi config/boards/arm/adv360/adv360.dtsi
+index 2f221fc..0c85836 100644
+--- config/boards/arm/adv360/adv360.dtsi
++++ config/boards/arm/adv360/adv360.dtsi
+@@ -21,6 +21,7 @@
+         zephyr,code-partition = &code_partition;
+         zephyr,sram = &sram0;
+         zephyr,flash = &flash0;
++        zephyr,console = &cdc_acm_uart;
+         zmk,kscan = &kscan0;
+         zmk,backlight = &backlight;
+         zmk,battery = &vbatt;
+@@ -43,9 +44,8 @@
+ 
+         >;
+     };
+-    ext-power {
++    EXT_POWER {
+             compatible = "zmk,ext-power-generic";
+-            label = "EXT_POWER";
+             control-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
+         };
+ 
+@@ -90,6 +90,9 @@
+ 
+ &usbd {
+     status = "okay";
++    cdc_acm_uart: cdc_acm_uart {
++        compatible = "zephyr,cdc-acm-uart";
++    };
+ };
+ 
+ 
+@@ -104,11 +107,9 @@
+         #size-cells = <1>;
+ 
+         sd_partition: partition@0 {
+-            label = "softdevice";
+             reg = <0x00000000 0x00026000>;
+         };
+         code_partition: partition@26000 {
+-            label = "code_partition";
+             reg = <0x00026000 0x000c6000>;
+         };
+ 
+@@ -122,12 +123,10 @@
+          * if enabled.
+          */
+         storage_partition: partition@ec000 {
+-            label = "storage";
+             reg = <0x000ec000 0x00008000>;
+         };
+ 
+         boot_partition: partition@f4000 {
+-            label = "adafruit_boot";
+             reg = <0x000f4000 0x0000c000>;
+         };
+     };
+@@ -142,7 +141,6 @@
+ 
+     led_strip: ws2812@0 {
+         compatible = "worldsemi,ws2812-spi";
+-        label = "WS2812";
+ 
+         /* SPI */
+         reg = <0>;
+diff --git config/boards/arm/adv360/adv360_left_defconfig config/boards/arm/adv360/adv360_left_defconfig
+index 33ef88e..b37679a 100644
+--- config/boards/arm/adv360/adv360_left_defconfig
++++ config/boards/arm/adv360/adv360_left_defconfig
+@@ -49,17 +49,26 @@ CONFIG_ZMK_BACKLIGHT_AUTO_OFF_IDLE=y
+ #BT configuration
+ CONFIG_BT_CTLR_TX_PWR_PLUS_8=y
+ CONFIG_BT_DIS_MANUF="Kinesis Corporation"
+-CONFIG_BT_PRIVACY=y
+-CONFIG_BT_GAP_PERIPHERAL_PREF_PARAMS=y
+-CONFIG_BT_PERIPHERAL_PREF_TIMEOUT=600
+-CONFIG_BT_PERIPHERAL_PREF_MIN_INT=12
+-CONFIG_BT_PERIPHERAL_PREF_MAX_INT=24
+-CONFIG_BT_PERIPHERAL_PREF_LATENCY=30
++#CONFIG_BT_PRIVACY=n
++#CONFIG_BT_GAP_PERIPHERAL_PREF_PARAMS=y
++#CONFIG_BT_PERIPHERAL_PREF_TIMEOUT=600
++#CONFIG_BT_PERIPHERAL_PREF_MIN_INT=12
++#CONFIG_BT_PERIPHERAL_PREF_MAX_INT=24
++#CONFIG_BT_PERIPHERAL_PREF_LATENCY=30
++CONFIG_BT_BAS=n #Set this to y to enable BLE battery reporting
+ 
+ #Misc configuration
+ CONFIG_USB_DEVICE_VID=0x29EA
+ CONFIG_USB_DEVICE_PID=0x0362
+ CONFIG_USB_DEVICE_MANUFACTURER="Kinesis Corporation"
+ CONFIG_ZMK_HID_REPORT_TYPE_NKRO=y
++CONFIG_ZMK_HID_KEYBOARD_EXTENDED_REPORT=n #Set this to y for F13-F24 and intl keys with NKRO
+ CONFIG_ZMK_HID_CONSUMER_REPORT_USAGES_BASIC=y
+ CONFIG_BUILD_OUTPUT_UF2=y
++
++CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=y
++CONFIG_ZMK_BLE_PASSKEY_ENTRY=n
++
++CONFIG_ZMK_BLE=y
++CONFIG_ZMK_USB=y
++CONFIG_ZMK_HID_INDICATORS=y
+\ No newline at end of file
+diff --git config/boards/arm/adv360/adv360_right_defconfig config/boards/arm/adv360/adv360_right_defconfig
+index f1eb05f..3c2e65a 100644
+--- config/boards/arm/adv360/adv360_right_defconfig
++++ config/boards/arm/adv360/adv360_right_defconfig
+@@ -54,3 +54,8 @@ CONFIG_BT_CTLR_TX_PWR_PLUS_8=y
+ CONFIG_ZMK_HID_REPORT_TYPE_NKRO=y
+ CONFIG_ZMK_HID_CONSUMER_REPORT_USAGES_BASIC=y
+ CONFIG_BUILD_OUTPUT_UF2=y
++
++CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=y
++
++CONFIG_ZMK_BLE=y
++CONFIG_ZMK_USB=y
+diff --git config/boards/arm/adv360/board.cmake config/boards/arm/adv360/board.cmake
+index 3465290..292a274 100644
+--- config/boards/arm/adv360/board.cmake
++++ config/boards/arm/adv360/board.cmake
+@@ -5,5 +5,5 @@
+ 
+ board_runner_args(nrfjprog "--nrf-family=NRF52" "--softreset")
+ 
++include(${ZEPHYR_BASE}/boards/common/uf2.board.cmake)
+ include(${ZEPHYR_BASE}/boards/common/nrfjprog.board.cmake)
+-#include(${ZEPHYR_BASE}/boards/common/blackmagicprobe.board.cmake)
+diff --git config/keymap.json config/keymap.json
+index 86b8982..bd3fa91 100644
+--- config/keymap.json
++++ config/keymap.json
+@@ -31,7 +31,7 @@
+       "&none ", "&bt BT_SEL 0 ", "&bt BT_SEL 1 ", "&bt BT_SEL 2 ", "&bt BT_SEL 3 ", "&bt BT_SEL 4 ", "&none                                                                                        ", "&trans        ", "&none        ", "&none        ", "&none        ", "&none        ", "&none        ", "&none",
+       "&none ", "&none        ", "&none        ", "&none        ", "&none        ", "&none        ", "&bootloader                                                                                  ", "&bootloader   ", "&none        ", "&none        ", "&none        ", "&none        ", "&none        ", "&none",
+       "&none ", "&none        ", "&none        ", "&none        ", "&none        ", "&none        ", "&none                ", "&none", "&none ", "&bt BT_CLR ", "&none ",                             "&rgb_ug RGB_MEFS_CMD 5 ", "&none        ", "&none        ", "&none        ", "&none        ", "&none        ", "&none",
+-      "&none ", "&none        ", "&none        ", "&none        ", "&none        ", "&none                                          ", "&none ", "&none ",                                                              "&none        ", "&none        ", "&none        ", "&none        ", "&none        ", "&none",
++      "&none ", "&none        ", "&none        ", "&none        ", "&macro_ver   ", "&none                                          ", "&none ", "&none ",                                                              "&none        ", "&none        ", "&none        ", "&none        ", "&none        ", "&none",
+       "&none ", "&none        ", "&none        ", "&none        ", "&none                                         ", "&none", "&none", "&none ", "&none      ", "&bl BL_TOG ", "&rgb_ug RGB_TOG                                ", "&bl BL_INC   ", "&bl BL_DEC   ", "&none        ", "&none        ", "&none"
+     ]
+   ]
+diff --git config/version.dtsi config/version.dtsi
+new file mode 100644
+index 0000000..e69de29
+diff --git config/west.yml config/west.yml
+index 3d195d8..9f3a48d 100644
+--- config/west.yml
++++ config/west.yml
+@@ -7,7 +7,7 @@ manifest:
+   projects:
+     - name: zmk
+       remote: refil
+-      revision: adv360-z3.2
++      revision: adv360-z3.5
+       import: app/west.yml
+   self:
+     path: config

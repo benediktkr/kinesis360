@@ -7,8 +7,6 @@
 [![github](https://www.sudo.is/readmes/github-benediktkr.svg)](https://github.com/benediktkr/kinesis360)
 [![matrix](https://www.sudo.is/readmes/matrix-ben-sudo.is.svg)](https://matrix.to/#/@ben:sudo.is)
 
-Fork of: [`KinesisCorporation/Adv360-Pro-ZMK`](https://github.com/KinesisCorporation/Adv360-Pro-ZMK)
-
 ## Overview
 
 - [ZMK Cheat sheet](https://peccu.github.io/zmk-cheat-sheet/)
@@ -16,6 +14,9 @@ Fork of: [`KinesisCorporation/Adv360-Pro-ZMK`](https://github.com/KinesisCorpora
 - [Quick start guide](manuals/quick_start.pdf)
 
 ## Git
+
+The repo forked [`KinesisCorporation/Adv360-Pro-ZMK`](https://github.com/KinesisCorporation/Adv360-Pro-ZMK)
+at 45fca6f6010b50cec3e7f8df4fe4af4bad1e470e.
 
 |               | Repository
 |:--------------|:---------------
@@ -41,6 +42,23 @@ In `.git/config` it looks like:
         remote = upstream
         merge = refs/heads/V3.0
 ```
+
+There are a cuple of `.patch` files taken with `git diff`:
+
+- [`since-fork.patch`](since-fork.patch): All changes since the work
+- [`config-since-fork.patch`](config-since-fork.patch): Changes in `config` since the fork
+
+Updating the `.patch` files:
+
+```console
+$ git checkout V3.0
+$ git pull upstream V3.0
+$ fork=45fca6f6010b50cec3e7f8df4fe4af4bad1e470e
+$ git diff $fork --no-prefix --patch -- config/ > config-since-fork.patch
+```
+
+The `config-since-fork.patch` file has the actual config changes, but the
+full `since-fork.patch` is kept for completeness.
 
 ## Use Tap-Dance
 
