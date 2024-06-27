@@ -23,6 +23,25 @@ Fork of: [`KinesisCorporation/Adv360-Pro-ZMK`](https://github.com/KinesisCorpora
 | Codeberg      | [`benk/kinesis360`](https://codeberg.org/benk/kinesis360)
 | GitHub        | [`benediktkr/kinesis360`](https://github.com/benediktkr/kinesis360)
 
+
+The `V3.0` branch of this repo tracks the main branch on of the `KinesisCorporation/Adv360-Pro-ZMK` repo.
+
+```console
+$ git remote add upstream https://github.com/KinesisCorporation/Adv360-Pro-ZMK
+$ git fetch
+$ git checkout --track upstream/V3.0
+$ git branch --set-upstream-to=upstream/V3.0 V3.0
+$ git pull upstream V3.0
+```
+
+In `.git/config` it looks like:
+
+```ini
+[branch "V3.0"]
+        remote = upstream
+        merge = refs/heads/V3.0
+```
+
 ## Use Tap-Dance
 
 Tap-Dance: https://zmk.dev/docs/behaviors/tap-dance
