@@ -79,10 +79,13 @@ The `left.uf2` and `right.uf2` files are in a tarball `firmware/Adv360-firmware_
 
 ## ZMK
 
-- [Supported Hardware](https://zmk.dev/docs/hardware#onboard): Advantage 360 Pro
-- [Configuration overview](https://zmk.dev/docs/config): Describes `Kconfig` and Devicetree file
-  formats and how to change seetings in them. Lists [config file locations](https://zmk.dev/docs/config#config-file-locations)
-  and what each config file does.
+- [ZMK Docs](https://www.zmk.dev/docs/)
+  - [Supported Hardware](https://zmk.dev/docs/hardware#onboard): Advantage 360 Pro
+  - [Configuration overview](https://zmk.dev/docs/config): Describes `Kconfig` and Devicetree file
+    formats and how to change seetings in them. Lists [config file locations](https://zmk.dev/docs/config#config-file-locations)
+    and what each config file does.
+- [ZMK Cheat sheet](https://peccu.github.io/zmk-cheat-sheet/)
+- [Zephyr Documentation](https://docs.zephyrproject.org/)
 
 ### Customized ZMK for Advantage 360
 
@@ -110,10 +113,13 @@ Full log: [`zmk-refil-adv360-z3.5-build-failure.txt`](zmk-refil-adv360-z3.5-buil
 
 ### Bluetooth
 
+ZMK:
 - [Features/Bluetooth](https://zmk.dev/docs/features/bluetooth)
 - [Behaviors/Bluetooth](https://zmk.dev/docs/behaviors/bluetooth): keymap bindings related to Bluetooth
 - [Configuration/Bluetooth](https://zmk.dev/docs/config/bluetooth)
 
+Zephyr:
+- [`CONFIG_BT_PRIVACY` - Zephyr 2.7.5 Documentation](https://docs.zephyrproject.org/2.7.5/reference/kconfig/CONFIG_BT_PRIVACY.html)
 
 ### Use Tap-Dance
 
@@ -123,8 +129,7 @@ Tap-Dance: https://zmk.dev/docs/behaviors/tap-dance
  * Normal layer: `tap,tap` `C` -> `ctrl C`
  * Mac layer:    `tap,tap` `C` -> `cmd C`
 
-## References
+## Other configs
 
-- [ZMK Cheat sheet](https://peccu.github.io/zmk-cheat-sheet/)
-- [ZMK Docs](https://www.zmk.dev/docs/)
+- [`git.sr.ht/~craftyguy`](https://git.sr.ht/~craftyguy/Adv360-Pro-ZMK)
 
