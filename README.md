@@ -76,7 +76,15 @@ $ make
 
 The `left.uf2` and `right.uf2` files are in a tarball `firmware/Adv360-firmware_${env.VERSION}.tar.gz`.
 
-## Use Tap-Dance
+## ZMK
+
+The Advantage 360 Pro uses [ZMK](https://www.zmk.dev). According to [the Kinesis repo](UPSTREAM.md) it
+uses [a customized version of ZMK](https://github.com/ReFil/zmk/tree/adv360-z3.5), but support for the
+Kinesis Advantage 360 has been merged in [`zmkfirmware/zmk#1454`](https://github.com/zmkfirmware/zmk/pull/1454).
+
+- [Supported Hardware](https://zmk.dev/docs/hardware#onboard): Advantage 360 Pro
+
+### Use Tap-Dance
 
 Tap-Dance: https://zmk.dev/docs/behaviors/tap-dance
 
@@ -87,6 +95,5 @@ Tap-Dance: https://zmk.dev/docs/behaviors/tap-dance
 ## References
 
 - [ZMK Cheat sheet](https://peccu.github.io/zmk-cheat-sheet/)
-- [Advantage 360 Pro User's manual](manuals/manual.pdf)
-- [Quick start guide](manuals/quick_start.pdf)
+- [ZMK Docs](https://www.zmk.dev/docs/)
 
