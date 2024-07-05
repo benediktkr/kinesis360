@@ -58,7 +58,7 @@ Updating the `.patch` files:
 $ git checkout V3.0
 $ git pull upstream V3.0
 $ fork=45fca6f6010b50cec3e7f8df4fe4af4bad1e470e
-$ git diff $fork --no-prefix --patch -- config/ > config-since-fork.patch
+$ git diff $fork --no-prefix --patch -- config/ > upstream-changes-config.patch
 ```
 
 These are the changes made to the upstream repo since my fork. It **does not show
