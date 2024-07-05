@@ -119,7 +119,7 @@ Full log: [`zmk-refil-adv360-z3.5-build-failure.txt`](zmk-refil-adv360-z3.5-buil
 
 Tap-Dance: https://zmk.dev/docs/behaviors/tap-dance
 
- * Both: `tap` `C` -> `C`
+ * Both:         `tap` `C`     -> `C`
  * Normal layer: `tap,tap` `C` -> `ctrl C`
  * Mac layer:    `tap,tap` `C` -> `cmd C`
 
