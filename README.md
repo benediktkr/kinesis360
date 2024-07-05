@@ -80,6 +80,9 @@ The `left.uf2` and `right.uf2` files are in a tarball `firmware/Adv360-firmware_
 ## ZMK
 
 - [Supported Hardware](https://zmk.dev/docs/hardware#onboard): Advantage 360 Pro
+- [Configuration overview](https://zmk.dev/docs/config): Describes `Kconfig` and Devicetree file
+  formats and how to change seetings in them. Lists [config file locations](https://zmk.dev/docs/config#config-file-locations)
+  and what each config file does.
 
 ### Customized ZMK for Advantage 360
 
@@ -104,6 +107,12 @@ warning: BT_SCAN_WITH_IDENTITY (defined at subsys/bluetooth/host/Kconfig:764) ha
 ```
 
 Full log: [`zmk-refil-adv360-z3.5-build-failure.txt`](zmk-refil-adv360-z3.5-build-failure.txt)
+
+### Bluetooth
+
+- [Features/Bluetooth](https://zmk.dev/docs/features/bluetooth)
+- [Behaviors/Bluetooth](https://zmk.dev/docs/behaviors/bluetooth): keymap bindings related to Bluetooth
+- [Configuration/Bluetooth](https://zmk.dev/docs/config/bluetooth)
 
 
 ### Use Tap-Dance
