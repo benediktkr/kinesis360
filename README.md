@@ -79,11 +79,32 @@ The `left.uf2` and `right.uf2` files are in a tarball `firmware/Adv360-firmware_
 
 ## ZMK
 
-The Advantage 360 Pro uses [ZMK](https://www.zmk.dev). According to [the Kinesis repo](UPSTREAM.md) it
-uses [a customized version of ZMK](https://github.com/ReFil/zmk/tree/adv360-z3.5), but support for the
-Kinesis Advantage 360 has been merged in [`zmkfirmware/zmk#1454`](https://github.com/zmkfirmware/zmk/pull/1454).
-
 - [Supported Hardware](https://zmk.dev/docs/hardware#onboard): Advantage 360 Pro
+
+### Customized ZMK for Advantage 360
+
+The Advantage 360 Pro uses [ZMK](https://www.zmk.dev), but it uses a customized version of ZMK that
+is mainted in [`ReFil/zmk` on GitHub](https://github.com/ReFil/zmk/tree/adv360-z3.5).
+
+Support Kinesis Advantage 360 has been merged in [`zmkfirmware/zmk#1454`](https://github.com/zmkfirmware/zmk/pull/1454),
+which merged the `advantage360` branch from `ReFil/zmk`. But the [`west.yml`](config/west.yml) file
+is still pointing to the `ReFil/zmk` repo (not sure why).
+
+The config and build uses ZMK from the [`ReFil/zmk`](https://github.com/ReFil/zmk) repo. Currently
+my builds are working using the `adv360-z3.2` branch. Upstream uses the `adv360-z3.5` branch, but
+I currently get some errors building this config on that branch:
+
+```text
+warning: Deprecated symbol NRF_STORE_REBOOT_TYPE_GPREGRET is enabled.
+
+
+warning: BT_SCAN_WITH_IDENTITY (defined at subsys/bluetooth/host/Kconfig:764) has direct dependencies
+  !BT_PRIVACY && (BT_CENTRAL || BT_OBSERVER) && BT_HCI_HOST && BT_HCI && BT
+  with value n, but is currently being y-selected by the following symbols:
+```
+
+Full log: [`zmk-refil-adv360-z3.5-build-failure.txt`](zmk-refil-adv360-z3.5-build-failure.txt)
+
 
 ### Use Tap-Dance
 
