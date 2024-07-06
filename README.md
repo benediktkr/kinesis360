@@ -14,8 +14,10 @@ at 45fca6f6010b50cec3e7f8df4fe4af4bad1e470e.
 
 Manuals for Kinesis Advantage 360 Pro:
 
-- [User's manual](manuals/manual.pdf)
-- [Quick start guide](manuals/quick_starrt.pdf)
+- [Quick start guide](manuals/Advantage360-Professional-QSG-v11-21-23_for-Web.pdf)
+- [User's manual](manuals/Advantage360-ZMK-KB360-PRO-Users-Manual-v12-11-23.pdf)
+- [Firmware update instructions](manuals/Advantage360-Professional-Firmware-Update-Instructions-11.22.23-KB360-PRO-GBR.pdf)
+- [Reset instructions](manuals/Advantage360-Professional-Settings-Reset-Instructions-11.22.23-KB360-PRO-GBR.pdf)
 
 See [`UPSTREAM.md`](UPSTREAM.md) for original `README.md` file.
 
