@@ -50,9 +50,13 @@ In `.git/config` it looks like:
 
 There are a couple of `.patch` files taken with `git diff`:
 
-- [`upstream-changes.patch`](upstream-changes.patch): All upstream changes since the fork
+- [`upstream-changes.patch`](upstream-changes.patch): All changes to the upstream repo since the
+  fork.
 - [`upstream-changes-config.patch`](upstream-changes-config.patch): Upstream changes in `config/`
-  since the fork
+  since the fork. These are the **changes made to the upstream repo** since my fork. It **does
+  not show how my config differs** from the upstream.
+- [`config-diff.patch`](config-diff.patch): The diff between `config/` in this fork and current
+  upstream. This how **my fork differs from current upstream**.
 
 Updating the `.patch` files:
 
@@ -61,10 +65,10 @@ $ git checkout V3.0
 $ git pull upstream V3.0
 $ fork=45fca6f6010b50cec3e7f8df4fe4af4bad1e470e
 $ git diff $fork --no-prefix --patch -- config/ > upstream-changes-config.patch
+$ git checkout main
+$ git diff V3.0 --no-prefix --patch -- config/ > config-diff.patch
 ```
 
-These are the changes made to the upstream repo since my fork. It **does not show
-how my config differs** from the upstream.
 
 ## Builds
 
