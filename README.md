@@ -119,7 +119,8 @@ ZMK:
 - [Configuration/Bluetooth](https://zmk.dev/docs/config/bluetooth)
 
 Zephyr:
-- [`CONFIG_BT_PRIVACY` - Zephyr 2.7.5 Documentation](https://docs.zephyrproject.org/2.7.5/reference/kconfig/CONFIG_BT_PRIVACY.html)
+- [`CONFIG_BT_PRIVACY` - Zephyr Documentation](https://docs.zephyrproject.org/latest/kconfig.html#CONFIG_BT_PRIVACY)
+- [`CONFIG_BT_BAS` - Zephyr Documentation](https://docs.zephyrproject.org/latest/kconfig.html#CONFIG_BT_BAS)
 
 ### Use Tap-Dance
 
