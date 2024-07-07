@@ -22,8 +22,7 @@ firmware:
 		 --build-arg "VERSION=${VERSION}" \
 		 --build-arg "USER_UID=${USER_UID}" \
 		 --build-arg "USER_GID=${USER_GID}" \
-		 --tag zmk \
-		 --file Dockerfile .
+		 -t zmk:latest .
 
 all: firmware
 
@@ -32,6 +31,6 @@ clean_firmware:
 	rm -vf dist/firmware/Adv360-firmware_*.tar.gz dist/firmware/*.txt
 
 clean_image:
-	$(DOCKER) image rm docker.io/zmkfirmware/zmk-build-arm:stable
+	$(DOCKER) image rm docker.io/zmkfirmware/zmk-build-arm:stable || true
 
 clean: clean_firmware clean_image
