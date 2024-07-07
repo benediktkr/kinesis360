@@ -1,0 +1,106 @@
+diff --git config/boards/arm/adv360/adv360.dtsi config/boards/arm/adv360/adv360.dtsi
+index 0c85836..339a547 100644
+--- config/boards/arm/adv360/adv360.dtsi
++++ config/boards/arm/adv360/adv360.dtsi
+@@ -106,9 +106,11 @@
+         #address-cells = <1>;
+         #size-cells = <1>;
+ 
++        // softdevice
+         sd_partition: partition@0 {
+             reg = <0x00000000 0x00026000>;
+         };
++        // code_partition
+         code_partition: partition@26000 {
+             reg = <0x00026000 0x000c6000>;
+         };
+@@ -122,10 +124,11 @@
+          * Storage partition will be used by FCB/LittleFS/NVS
+          * if enabled.
+          */
++        // storage
+         storage_partition: partition@ec000 {
+             reg = <0x000ec000 0x00008000>;
+         };
+-
++        // adafruit_boot
+         boot_partition: partition@f4000 {
+             reg = <0x000f4000 0x0000c000>;
+         };
+@@ -139,6 +142,7 @@
+     pinctrl-1 = <&spi3_sleep>;
+     pinctrl-names = "default", "sleep";
+ 
++    // WS2812
+     led_strip: ws2812@0 {
+         compatible = "worldsemi,ws2812-spi";
+ 
+diff --git config/boards/arm/adv360/adv360_left_defconfig config/boards/arm/adv360/adv360_left_defconfig
+index b37679a..0f4162f 100644
+--- config/boards/arm/adv360/adv360_left_defconfig
++++ config/boards/arm/adv360/adv360_left_defconfig
+@@ -49,13 +49,16 @@ CONFIG_ZMK_BACKLIGHT_AUTO_OFF_IDLE=y
+ #BT configuration
+ CONFIG_BT_CTLR_TX_PWR_PLUS_8=y
+ CONFIG_BT_DIS_MANUF="Kinesis Corporation"
+-#CONFIG_BT_PRIVACY=n
+-#CONFIG_BT_GAP_PERIPHERAL_PREF_PARAMS=y
+-#CONFIG_BT_PERIPHERAL_PREF_TIMEOUT=600
+-#CONFIG_BT_PERIPHERAL_PREF_MIN_INT=12
+-#CONFIG_BT_PERIPHERAL_PREF_MAX_INT=24
+-#CONFIG_BT_PERIPHERAL_PREF_LATENCY=30
+-CONFIG_BT_BAS=n #Set this to y to enable BLE battery reporting
++CONFIG_BT_PRIVACY=y
++CONFIG_BT_GAP_PERIPHERAL_PREF_PARAMS=y
++CONFIG_BT_PERIPHERAL_PREF_TIMEOUT=600
++CONFIG_BT_PERIPHERAL_PREF_MIN_INT=12
++CONFIG_BT_PERIPHERAL_PREF_MAX_INT=24
++CONFIG_BT_PERIPHERAL_PREF_LATENCY=30
++# Battery reporting
++# https://zmk.dev/docs/config/system#bluetooth
++# https://github.com/KinesisCorporation/Adv360-Pro-ZMK/pull/248/files
++CONFIG_BT_BAS=y
+ 
+ #Misc configuration
+ CONFIG_USB_DEVICE_VID=0x29EA
+@@ -66,9 +69,9 @@ CONFIG_ZMK_HID_KEYBOARD_EXTENDED_REPORT=n #Set this to y for F13-F24 and intl ke
+ CONFIG_ZMK_HID_CONSUMER_REPORT_USAGES_BASIC=y
+ CONFIG_BUILD_OUTPUT_UF2=y
+ 
+-CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=y
++CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=n
+ CONFIG_ZMK_BLE_PASSKEY_ENTRY=n
+ 
+ CONFIG_ZMK_BLE=y
+ CONFIG_ZMK_USB=y
+-CONFIG_ZMK_HID_INDICATORS=y
+\ No newline at end of file
++CONFIG_ZMK_HID_INDICATORS=n
+diff --git config/boards/arm/adv360/adv360_right_defconfig config/boards/arm/adv360/adv360_right_defconfig
+index 3c2e65a..6cf4875 100644
+--- config/boards/arm/adv360/adv360_right_defconfig
++++ config/boards/arm/adv360/adv360_right_defconfig
+@@ -55,7 +55,8 @@ CONFIG_ZMK_HID_REPORT_TYPE_NKRO=y
+ CONFIG_ZMK_HID_CONSUMER_REPORT_USAGES_BASIC=y
+ CONFIG_BUILD_OUTPUT_UF2=y
+ 
+-CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=y
++CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=n
++CONFIG_ZMK_BLE_PASSKEY_ENTRY=n
+ 
+ CONFIG_ZMK_BLE=y
+ CONFIG_ZMK_USB=y
+diff --git config/west.yml config/west.yml
+index 9f3a48d..137ea40 100644
+--- config/west.yml
++++ config/west.yml
+@@ -7,7 +7,8 @@ manifest:
+   projects:
+     - name: zmk
+       remote: refil
+-      revision: adv360-z3.5
++      revision: adv360-z3.2
++      #revision: adv360-z3.5
+       import: app/west.yml
+   self:
+     path: config

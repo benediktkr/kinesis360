@@ -32,6 +32,6 @@ clean_firmware:
 	rm -vf dist/firmware/Adv360-firmware_*.tar.gz dist/firmware/*.txt
 
 clean_image:
-	$(DOCKER) image rm zmk docker.io/zmkfirmware/zmk-build-arm:stable
+	$(DOCKER) image rm docker.io/zmkfirmware/zmk-build-arm:stable
 
 clean: clean_firmware clean_image
