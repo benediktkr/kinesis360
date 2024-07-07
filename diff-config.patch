@@ -1,45 +1,78 @@
 diff --git config/boards/arm/adv360/adv360.dtsi config/boards/arm/adv360/adv360.dtsi
-index 0c85836..339a547 100644
+index 0c85836..71c4131 100644
 --- config/boards/arm/adv360/adv360.dtsi
 +++ config/boards/arm/adv360/adv360.dtsi
-@@ -106,9 +106,11 @@
-         #address-cells = <1>;
+@@ -21,7 +21,7 @@
+         zephyr,code-partition = &code_partition;
+         zephyr,sram = &sram0;
+         zephyr,flash = &flash0;
+-        zephyr,console = &cdc_acm_uart;
++        //zephyr,console = &cdc_acm_uart;
+         zmk,kscan = &kscan0;
+         zmk,backlight = &backlight;
+         zmk,battery = &vbatt;
+@@ -44,8 +44,9 @@
+ 
+         >;
+     };
+-    EXT_POWER {
++    ext-power {
+             compatible = "zmk,ext-power-generic";
++            label = "EXT_POWER";
+             control-gpios = <&gpio0 13 GPIO_ACTIVE_HIGH>;
+         };
+ 
+@@ -90,9 +91,9 @@
+ 
+ &usbd {
+     status = "okay";
+-    cdc_acm_uart: cdc_acm_uart {
+-        compatible = "zephyr,cdc-acm-uart";
+-    };
++    //cdc_acm_uart: cdc_acm_uart {
++    //    compatible = "zephyr,cdc-acm-uart";
++    //};
+ };
+ 
+ 
+@@ -107,9 +108,11 @@
          #size-cells = <1>;
  
-+        // softdevice
          sd_partition: partition@0 {
++            label = "softdevice";
              reg = <0x00000000 0x00026000>;
          };
-+        // code_partition
          code_partition: partition@26000 {
++            label = "code_partition";
              reg = <0x00026000 0x000c6000>;
          };
-@@ -122,10 +124,11 @@
-          * Storage partition will be used by FCB/LittleFS/NVS
+ 
+@@ -123,10 +126,12 @@
           * if enabled.
           */
-+        // storage
          storage_partition: partition@ec000 {
++            label = "storage";
              reg = <0x000ec000 0x00008000>;
          };
--
-+        // adafruit_boot
+ 
          boot_partition: partition@f4000 {
++            label = "adafruit_boot";
              reg = <0x000f4000 0x0000c000>;
          };
-@@ -139,6 +142,7 @@
-     pinctrl-1 = <&spi3_sleep>;
-     pinctrl-names = "default", "sleep";
+     };
+@@ -141,6 +146,7 @@
  
-+    // WS2812
      led_strip: ws2812@0 {
          compatible = "worldsemi,ws2812-spi";
++        label = "WS2812";
  
+         /* SPI */
+         reg = <0>;
 diff --git config/boards/arm/adv360/adv360_left_defconfig config/boards/arm/adv360/adv360_left_defconfig
-index b37679a..0f4162f 100644
+index b37679a..19b254f 100644
 --- config/boards/arm/adv360/adv360_left_defconfig
 +++ config/boards/arm/adv360/adv360_left_defconfig
-@@ -49,13 +49,16 @@ CONFIG_ZMK_BACKLIGHT_AUTO_OFF_IDLE=y
+@@ -49,26 +49,29 @@ CONFIG_ZMK_BACKLIGHT_AUTO_OFF_IDLE=y
  #BT configuration
  CONFIG_BT_CTLR_TX_PWR_PLUS_8=y
  CONFIG_BT_DIS_MANUF="Kinesis Corporation"
@@ -63,21 +96,26 @@ index b37679a..0f4162f 100644
  
  #Misc configuration
  CONFIG_USB_DEVICE_VID=0x29EA
-@@ -66,9 +69,9 @@ CONFIG_ZMK_HID_KEYBOARD_EXTENDED_REPORT=n #Set this to y for F13-F24 and intl ke
+ CONFIG_USB_DEVICE_PID=0x0362
+ CONFIG_USB_DEVICE_MANUFACTURER="Kinesis Corporation"
+ CONFIG_ZMK_HID_REPORT_TYPE_NKRO=y
+-CONFIG_ZMK_HID_KEYBOARD_EXTENDED_REPORT=n #Set this to y for F13-F24 and intl keys with NKRO
++#CONFIG_ZMK_HID_KEYBOARD_EXTENDED_REPORT=n #Set this to y for F13-F24 and intl keys with NKRO
  CONFIG_ZMK_HID_CONSUMER_REPORT_USAGES_BASIC=y
  CONFIG_BUILD_OUTPUT_UF2=y
  
 -CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=y
-+CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=n
- CONFIG_ZMK_BLE_PASSKEY_ENTRY=n
+-CONFIG_ZMK_BLE_PASSKEY_ENTRY=n
++#CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=n
++#CONFIG_ZMK_BLE_PASSKEY_ENTRY=n
  
  CONFIG_ZMK_BLE=y
  CONFIG_ZMK_USB=y
 -CONFIG_ZMK_HID_INDICATORS=y
 \ No newline at end of file
-+CONFIG_ZMK_HID_INDICATORS=n
++#CONFIG_ZMK_HID_INDICATORS=n
 diff --git config/boards/arm/adv360/adv360_right_defconfig config/boards/arm/adv360/adv360_right_defconfig
-index 3c2e65a..6cf4875 100644
+index 3c2e65a..329592f 100644
 --- config/boards/arm/adv360/adv360_right_defconfig
 +++ config/boards/arm/adv360/adv360_right_defconfig
 @@ -55,7 +55,8 @@ CONFIG_ZMK_HID_REPORT_TYPE_NKRO=y
@@ -85,11 +123,21 @@ index 3c2e65a..6cf4875 100644
  CONFIG_BUILD_OUTPUT_UF2=y
  
 -CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=y
-+CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=n
-+CONFIG_ZMK_BLE_PASSKEY_ENTRY=n
++#CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=n
++#CONFIG_ZMK_BLE_PASSKEY_ENTRY=n
  
  CONFIG_ZMK_BLE=y
  CONFIG_ZMK_USB=y
+diff --git config/boards/arm/adv360/board.cmake config/boards/arm/adv360/board.cmake
+index 292a274..62e049b 100644
+--- config/boards/arm/adv360/board.cmake
++++ config/boards/arm/adv360/board.cmake
+@@ -5,5 +5,4 @@
+ 
+ board_runner_args(nrfjprog "--nrf-family=NRF52" "--softreset")
+ 
+-include(${ZEPHYR_BASE}/boards/common/uf2.board.cmake)
+ include(${ZEPHYR_BASE}/boards/common/nrfjprog.board.cmake)
 diff --git config/west.yml config/west.yml
 index 9f3a48d..137ea40 100644
 --- config/west.yml
