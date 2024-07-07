@@ -16,6 +16,7 @@ pipeline {
         stage('checkout') {
             steps {
                 script {
+                    sh "env"
                     // sh "git remote add github https://www.github.com/benediktkr/kinesis360"
                     // sh "git pull --rebase github main"
                     // sh "git config --global color.ui true"
