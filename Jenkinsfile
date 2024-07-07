@@ -40,16 +40,16 @@ pipeline {
                 sh ".pipeline/build.sh"
             }
         }
-        stage('keymap-editor-web') {
-            steps {
-                script {
-                    dir("Adv360-Pro-KeymapEditor") {
-                        git "https://github.com/KinesisCorporation/Adv360-Pro-KeymapEditor"
-                    }
-                    sh ".pipeline/build-keymap-editor-web.sh"
-                }
-            }
-        }
+        //stage('keymap-editor-web') {
+        //    steps {
+        //        script {
+        //            dir("Adv360-Pro-KeymapEditor") {
+        //                git "https://github.com/KinesisCorporation/Adv360-Pro-KeymapEditor"
+        //            }
+        //            sh ".pipeline/build-keymap-editor-web.sh"
+        //        }
+        //    }
+        //}
 
     }
     post {

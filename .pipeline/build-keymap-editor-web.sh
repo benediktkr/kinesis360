@@ -33,10 +33,6 @@ BUILD_UID=$(id -u)
 BUILD_GID=$(id -g)
 
 echo "Cleaning up..."
-if [[ -d "./${OUTPUT_DIR}" ]]; then
-    echo "removing: '${OUTPUT_DIR}'"
-    rm -r ./${OUTPUT_DIR}
-fi
 find ${OUTPUT_DIR} -name "${NAME}_${VERSION}.zip" -print -delete
 
 mkdir -pv $CACHE_DIR $NODE_MODULES_DIR $OUTPUT_DIR
