@@ -11,6 +11,8 @@ pipeline {
     environment {
         VENV = "${env.WORKSPACE}@tmp/cache/venv"
         PATH = "${env.VENV}/bin:${HOME}/.local/bin:${PATH}"
+        CALVER_DATE = sh(script: "date -I", returnStdout: true).trim().replace("-",".")
+        VERSION = "${env.CALVER_DATE}_${env.BUILD_NUMBER}"
     }
     stages {
         stage('checkout') {
@@ -22,7 +24,6 @@ pipeline {
                     // sh "git config --global color.ui true"
                     // sh "git --no-pager log HEAD^..HEAD"
                     // sh "git push origin main"
-                    env.VERSION = sh(script: "date -I", returnStdout: true).trim().replace("-",".")
                     currentBuild.description = env.VERSION
                     sh "ls --color=always -l"
                 }
@@ -36,7 +37,7 @@ pipeline {
         }
         stage('make') {
             steps {
-                sh "make"
+                sh ".pipeline/build.sh"
             }
         }
         stage('keymap-editor-web') {
@@ -54,11 +55,11 @@ pipeline {
     post {
         success {
             archiveArtifacts(
-                artifacts: "firmware/Adv360-firmware_${env.VERSION}.tar.gz,firmware/*.sha256.txt",
+                artifacts: "dist/firmware/Adv360-firmware_${env.VERSION}.tar.gz,dist/firmware/Adv360_firmware_${env.VERSION}.tar.gz.sha256.txt",
                 fingerprint: true
-                )
+            )
             withCredentials([string(credentialsId: "gitea-user-ben-full-token", variable: 'GITEA_SECRET')]) {
-                sh 'curl -i -H "Authorization: token $GITEA_SECRET" --upload-file firmware/Adv360-firmware_${VERSION}.tar.gz https://git.sudo.is/api/packages/ben/generic/kinesis360/${VERSION}/Adv360-firmware_${VERSION}.tar.gz'
+                sh 'curl -i -H "Authorization: token $GITEA_SECRET" --upload-file dist/firmware/Adv360-firmware_${VERSION}.tar.gz https://git.sudo.is/api/packages/ben/generic/kinesis360/${VERSION}/Adv360-firmware_${VERSION}.tar.gz'
                 // add -s -f to silence and fail on errors
             }
         }
@@ -68,6 +69,7 @@ pipeline {
             //sh "hatch --version"
         }
         cleanup {
+            sh ".pipeline/clean.sh"
             cleanWs(deleteDirs: true, disableDeferredWipeout: true, notFailBuild: true)
        }
    }

@@ -10,26 +10,28 @@ SELINUX1 := :z
 SELINUX2 := ,z
 endif
 
-.PHONY: all clean
+.PHONY: all firmware clean_firmware clean_image clean
 
-all:
+firmware:
 	echo "using uid=${USER_UID},gid=${USER_GID} for the build"
 	$(DOCKER) build \
 		 --pull \
+		 --progress plain \
+		 --target export \
+		 --output dist/ \
+		 --build-arg "VERSION=${VERSION}" \
 		 --build-arg "USER_UID=${USER_UID}" \
 		 --build-arg "USER_GID=${USER_GID}" \
 		 --tag zmk \
 		 --file Dockerfile .
 
-	$(DOCKER) run \
-		--rm \
-		--name zmk \
-		-e VERSION="${VERSION}" \
-		-v $(PWD)/firmware:/usr/local/src/firmware$(SELINUX1) \
-		-v $(PWD)/config:/usr/local/src/config:ro$(SELINUX2) \
-		zmk
+all: firmware
 
-clean:
-	rm -vf firmware/*.uf2
-	rm -vf firmware/Adv360-firmware_*.tar.gz firmware/*.txt
+clean_firmware:
+	rm -vf build/left/*.uf2 build/right/*.uf2
+	rm -vf dist/firmware/Adv360-firmware_*.tar.gz dist/firmware/*.txt
+
+clean_image:
 	$(DOCKER) image rm zmk docker.io/zmkfirmware/zmk-build-arm:stable
+
+clean: clean_firmware clean_image

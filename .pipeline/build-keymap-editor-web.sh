@@ -27,7 +27,7 @@ fi
 
 CACHE_DIR="$HOME/.cache/npm-docker/builds/${REPO_NAME}/${NAME}/.npm"
 NODE_MODULES_DIR="$HOME/.cache/npm-docker/builds/${REPO_NAME}/${NAME}/node_modules"
-OUTPUT_DIR=target/${NAME}
+OUTPUT_DIR=dist/${NAME}
 
 BUILD_UID=$(id -u)
 BUILD_GID=$(id -g)
@@ -37,7 +37,7 @@ if [[ -d "./${OUTPUT_DIR}" ]]; then
     echo "removing: '${OUTPUT_DIR}'"
     rm -r ./${OUTPUT_DIR}
 fi
-find dist/ -name "${NAME}_${VERSION}.zip" -print -delete
+find ${OUTPUT_DIR} -name "${NAME}_${VERSION}.zip" -print -delete
 
 mkdir -pv $CACHE_DIR $NODE_MODULES_DIR $OUTPUT_DIR
 
@@ -104,16 +104,16 @@ fi
     #  npm run dev
     # which would presumably start a dev server. lets see how this works first
 
-    ls -lah dist/
+    ls -lah $OUTPUT_DIR
 )
 
-#(
-#    set -e
-#    pushd $OUTPUT_DIR
-#    echo
-#    echo "creating zip file from '${OUTPUT_DIR}'"
-#    zip -r ../../dist/${NAME}_${VERSION}.zip ./
-#)
+(
+    set -e
+    pushd $OUTPUT_DIR
+    echo
+    echo "creating zip file from '${OUTPUT_DIR}'"
+    zip -r ../../dist/${NAME}_${VERSION}.zip ./
+)
 
 echo
 ls -1 dist/

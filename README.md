@@ -81,7 +81,7 @@ To build the firmware:
 $ make
 ```
 
-The `left.uf2` and `right.uf2` files are in a tarball `firmware/Adv360-firmware_${env.VERSION}.tar.gz`.
+The `left.uf2` and `right.uf2` files are in a tarball `dist/firmware/Adv360-firmware_${VERSION}.tar.gz`.
 
 ## ZMK
 
