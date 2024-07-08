@@ -67,7 +67,7 @@ pipeline {
             sh "docker image ls"
         }
         cleanup {
-            sh ".pipeline/clean.sh"
+            //sh ".pipeline/clean.sh"
             cleanWs(deleteDirs: true, disableDeferredWipeout: true, notFailBuild: true)
             dir(env.VENV) {
                 deleteDir()
