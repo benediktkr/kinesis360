@@ -6,11 +6,11 @@ set -eu
 # So we set an empty string as the default value with '-', since -z test
 # if the length of the resulting string is zero
 if [[ -z "${VERSION-}" ]]; then
-    /usr/local/bin/version.py
     export VERSION="$(/usr/local/bin/version.py)"
-    echo "Environment variable VERSION unset, SNAPSHOT build"
-    echo "Set VERSION='${VERSION}'"
+    echo "Environment variable VERSION unset"
 fi
+
+echo "Version: '${VERSION}'"
 
 set -x
 

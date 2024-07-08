@@ -1,4 +1,4 @@
-FROM docker.io/zmkfirmware/zmk-build-arm:stable as builder
+FROM zmkfirmware/zmk-build-arm:stable as builder
 MAINTAINER Ben <pkg@sudo.is>
 
 ENV TZ=UTC
