@@ -3,6 +3,7 @@
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from datetime import date
 import os
+import subprocess
 
 
 def get_version():
@@ -10,11 +11,9 @@ def get_version():
     if len(os.environ.get("VERSION", "")) > 0:
         return os.environ["VERSION"]
     else:
-        # The git module is not available in the docker image, but it gets passed VERSION
-        # as a build arg via the Makefile, so it does not need to run this.
-        import git
         calver_today = date.today().isoformat().replace("-", ".")
-        calver_append = git.Repo().head.object.hexsha[:7]
+        #calver_append = git.Repo().head.object.hexsha[:7]
+        calver_append = subprocess.check_output(["git", "rev-parse", "--short", "HEAD"]).decode().strip()
         return f"{calver_today}_{calver_append}"
 
 
