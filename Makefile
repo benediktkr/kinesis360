@@ -1,4 +1,5 @@
 DOCKER := $(shell { command -v podman || command -v docker; })
+#DOCKER := $(shell { command -v docker; })
 USER_UID := $(shell id -u)
 USER_GID := $(shell id -g)
 detected_OS := $(shell uname)  # Classify UNIX OS
@@ -14,7 +15,7 @@ endif
 
 firmware:
 	echo "Using uid=${USER_UID},gid=${USER_GID} and building with DOCKER=${DOCKER}"
-	$(DOCKER) build \
+	$(DOCKER) buildx build \
 		 --pull \
 		 --progress plain \
 		 --target export \
