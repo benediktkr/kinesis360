@@ -116,7 +116,9 @@ warning: BT_SCAN_WITH_IDENTITY (defined at subsys/bluetooth/host/Kconfig:764) ha
 ```
 
 Documentation is really sparse, but [`KinesisCoproration/Adv360-Pro-ZMK#251`](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/issues/251)
-says that `CONFIG_BT_PRIVACY` (IRK) cannot be enabled. Full error: [`zmk-refil-adv360-z3.5-build-failure.txt`](data/zmk-refil-adv360-z3.5-build-failure.txt)
+says that `CONFIG_BT_PRIVACY` (IRK) cannot be enabled.
+
+Full error: [`zmk-refil-adv360-z3.5-build-failure.txt`](data/zmk-refil-adv360-z3.5-build-failure.txt)
 
 ### Bluetooth
 
