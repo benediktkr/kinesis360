@@ -2,15 +2,17 @@
 
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from datetime import date
-import git
 import os
 
 
 def get_version():
-    # The VERSION var always exists when running in docker, because it is declared as a build var
+    # The VERSION var always exists when running in docker, because it is declared as a build arg
     if len(os.environ.get("VERSION", "")) > 0:
         return os.environ["VERSION"]
     else:
+        # The git module is not available in the docker image, but it gets passed VERSION
+        # as a build arg via the Makefile, so it does not need to run this.
+        import git
         calver_today = date.today().isoformat().replace("-", ".")
         calver_append = git.Repo().head.object.hexsha[:7]
         return f"{calver_today}_{calver_append}"
