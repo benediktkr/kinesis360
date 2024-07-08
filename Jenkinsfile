@@ -17,12 +17,10 @@ pipeline {
             steps {
                 script {
                     sh "env"
-                    // sh "git remote add github https://www.github.com/benediktkr/kinesis360"
-                    // sh "git pull --rebase github main"
-                    // sh "git config --global color.ui true"
-                    // sh "git --no-pager log HEAD^..HEAD"
-                    // sh "git push origin main"
+                    sh "git config --global color.ui true"
                     sh "ls --color=always -l"
+                    env.VERSION = sh("bin/version.py", returnStdout: true)
+                    currentBuild.description = env.VERSION
                 }
             }
         }
@@ -34,8 +32,6 @@ pipeline {
         //}
         stage('make') {
             steps {
-                env.VERSION = sh("bin/version.py", returnStdout: true)
-                currentBuild.description = env.VERSION
                 sh ".pipeline/build.sh"
             }
         }
