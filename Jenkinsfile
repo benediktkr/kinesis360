@@ -19,7 +19,7 @@ pipeline {
                     sh "env"
                     sh "git config --global color.ui true"
                     sh "ls --color=always -l"
-                    env.VERSION = sh(script: "bin/version.py", returnStdout: true)
+                    env.VERSION = sh(script: "bin/version.py", returnStdout: true).trim()
                     currentBuild.description = env.VERSION
                 }
             }

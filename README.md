@@ -50,13 +50,13 @@ In `.git/config` it looks like:
 
 There are a couple of `.patch` files taken with `git diff`:
 
-- [`upstream-changes.patch`](upstream-changes.patch): All changes to the upstream repo since the
-  fork.
-- [`upstream-changes-config.patch`](upstream-changes-config.patch): Upstream changes in `config/`
-  since the fork. These are the **changes made to the upstream repo** since my fork. It **does
-  not show how my config differs** from the upstream.
-- [`diff-config.patch`](diff-config.patch): The diff between `config/` in this fork and current
-  upstream. This how **my fork differs from current upstream**.
+- [`upstream-changes.patch`](data/upstream-changes.patch): All changes to the upstream repo
+  since the fork.
+- [`upstream-changes-config.patch`](data/upstream-changes-config.patch): Upstream changes
+  in `config/` since the fork. These are the **changes made to the upstream repo** since
+  my fork. It **does not show how my config differs** from the upstream.
+- [`diff-config.patch`](data/diff-config.patch): The diff between `config/` in this fork and
+  current upstream. This how **my fork differs from current upstream**.
 
 
 Updating the `.patch` files:
@@ -65,9 +65,9 @@ Updating the `.patch` files:
 $ git checkout V3.0
 $ git pull upstream V3.0
 $ fork=45fca6f6010b50cec3e7f8df4fe4af4bad1e470e
-$ git diff $fork --no-prefix --patch -- config/ > upstream-changes-config.patch
+$ git diff $fork --no-prefix --patch -- config/ > data/upstream-changes-config.patch
 $ git checkout main
-$ git diff V3.0 --no-prefix --patch -- config/ > diff-config.patch
+$ git diff V3.0 --no-prefix --patch -- config/ > data/diff-config.patch
 ```
 
 ## Builds
@@ -115,7 +115,8 @@ warning: BT_SCAN_WITH_IDENTITY (defined at subsys/bluetooth/host/Kconfig:764) ha
   with value n, but is currently being y-selected by the following symbols:
 ```
 
-Full log: [`zmk-refil-adv360-z3.5-build-failure.txt`](zmk-refil-adv360-z3.5-build-failure.txt)
+Documentation is really sparse, but [`KinesisCoproration/Adv360-Pro-ZMK#251`](https://github.com/KinesisCorporation/Adv360-Pro-ZMK/issues/251)
+says that `CONFIG_BT_PRIVACY` (IRK) cannot be enabled. Full error: [`zmk-refil-adv360-z3.5-build-failure.txt`](data/zmk-refil-adv360-z3.5-build-failure.txt)
 
 ### Bluetooth
 
