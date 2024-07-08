@@ -2,6 +2,7 @@
 
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 from datetime import date
+import git
 import os
 
 
@@ -11,7 +12,7 @@ def get_version():
         return os.environ["VERSION"]
     else:
         calver_today = date.today().isoformat().replace("-", ".")
-        calver_append = os.environ.get("BUILD_NUMBER", "SNAPSHOT")
+        calver_append = git.Repo().head.object.hexsha[:7]
         return f"{calver_today}_{calver_append}"
 
 

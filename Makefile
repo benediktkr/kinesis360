@@ -2,8 +2,8 @@ DOCKER := $(shell { command -v podman || command -v docker; })
 #DOCKER := $(shell { command -v docker; })
 USER_UID := $(shell id -u)
 USER_GID := $(shell id -g)
-detected_OS := $(shell uname)  # Classify UNIX OS
-ifeq ($(strip $(detected_OS)),Darwin) #We only care if it's OS X
+VERSION := $(shell bin/version.py)
+ifeq ($(strip uname),Darwin)
 SELINUX1 :=
 SELINUX2 :=
 else

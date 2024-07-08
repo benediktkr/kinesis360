@@ -11,8 +11,6 @@ pipeline {
     environment {
         VENV = "${env.WORKSPACE}@tmp/cache/venv"
         PATH = "${env.VENV}/bin:${HOME}/.local/bin:${PATH}"
-        CALVER_DATE = sh(script: "date -I", returnStdout: true).trim().replace("-",".")
-        VERSION = "${env.CALVER_DATE}_${env.BUILD_NUMBER}"
     }
     stages {
         stage('checkout') {
@@ -24,7 +22,6 @@ pipeline {
                     // sh "git config --global color.ui true"
                     // sh "git --no-pager log HEAD^..HEAD"
                     // sh "git push origin main"
-                    currentBuild.description = env.VERSION
                     sh "ls --color=always -l"
                 }
             }
@@ -37,6 +34,8 @@ pipeline {
         //}
         stage('make') {
             steps {
+                env.VERSION = sh("bin/version.py", returnStdout: true)
+                currentBuild.description = env.VERSION
                 sh ".pipeline/build.sh"
             }
         }
