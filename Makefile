@@ -13,7 +13,7 @@ endif
 .PHONY: all firmware clean_firmware clean_image clean
 
 firmware:
-	echo "using uid=${USER_UID},gid=${USER_GID} for the build"
+	echo "Using uid=${USER_UID},gid=${USER_GID} and building with DOCKER=${DOCKER}"
 	$(DOCKER) build \
 		 --pull \
 		 --progress plain \

@@ -64,9 +64,7 @@ pipeline {
             }
         }
         always {
-            //sh "which python3 python pip hatch"
-            sh "python3 --version"
-            //sh "hatch --version"
+            sh "docker image ls"
         }
         cleanup {
             sh ".pipeline/clean.sh"

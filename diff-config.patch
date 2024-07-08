@@ -168,16 +168,15 @@ index b37679a..19b254f 100644
 \ No newline at end of file
 +#CONFIG_ZMK_HID_INDICATORS=n
 diff --git config/boards/arm/adv360/adv360_right_defconfig config/boards/arm/adv360/adv360_right_defconfig
-index 3c2e65a..329592f 100644
+index 3c2e65a..e4adc62 100644
 --- config/boards/arm/adv360/adv360_right_defconfig
 +++ config/boards/arm/adv360/adv360_right_defconfig
-@@ -55,7 +55,8 @@ CONFIG_ZMK_HID_REPORT_TYPE_NKRO=y
+@@ -55,7 +55,7 @@ CONFIG_ZMK_HID_REPORT_TYPE_NKRO=y
  CONFIG_ZMK_HID_CONSUMER_REPORT_USAGES_BASIC=y
  CONFIG_BUILD_OUTPUT_UF2=y
  
 -CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=y
 +#CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=n
-+#CONFIG_ZMK_BLE_PASSKEY_ENTRY=n
  
  CONFIG_ZMK_BLE=y
  CONFIG_ZMK_USB=y
@@ -264,16 +263,14 @@ index bd3fa91..2be1c49 100644
    ]
  }
 diff --git config/west.yml config/west.yml
-index 9f3a48d..137ea40 100644
+index 9f3a48d..0a8ebde 100644
 --- config/west.yml
 +++ config/west.yml
-@@ -7,7 +7,8 @@ manifest:
+@@ -7,6 +7,7 @@ manifest:
    projects:
      - name: zmk
        remote: refil
--      revision: adv360-z3.5
-+      revision: adv360-z3.2
-+      #revision: adv360-z3.5
++      #revision: adv360-z3.2
+       revision: adv360-z3.5
        import: app/west.yml
    self:
-     path: config
