@@ -122,7 +122,7 @@ index 0c85836..71c4131 100644
          /* SPI */
          reg = <0>;
 diff --git config/boards/arm/adv360/adv360_left_defconfig config/boards/arm/adv360/adv360_left_defconfig
-index b37679a..19b254f 100644
+index b37679a..486b2bb 100644
 --- config/boards/arm/adv360/adv360_left_defconfig
 +++ config/boards/arm/adv360/adv360_left_defconfig
 @@ -49,26 +49,29 @@ CONFIG_ZMK_BACKLIGHT_AUTO_OFF_IDLE=y
@@ -159,7 +159,7 @@ index b37679a..19b254f 100644
  
 -CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=y
 -CONFIG_ZMK_BLE_PASSKEY_ENTRY=n
-+#CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=n
++#CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=y
 +#CONFIG_ZMK_BLE_PASSKEY_ENTRY=n
  
  CONFIG_ZMK_BLE=y
@@ -168,7 +168,7 @@ index b37679a..19b254f 100644
 \ No newline at end of file
 +#CONFIG_ZMK_HID_INDICATORS=n
 diff --git config/boards/arm/adv360/adv360_right_defconfig config/boards/arm/adv360/adv360_right_defconfig
-index 3c2e65a..e4adc62 100644
+index 3c2e65a..b1abea7 100644
 --- config/boards/arm/adv360/adv360_right_defconfig
 +++ config/boards/arm/adv360/adv360_right_defconfig
 @@ -55,7 +55,7 @@ CONFIG_ZMK_HID_REPORT_TYPE_NKRO=y
@@ -176,19 +176,20 @@ index 3c2e65a..e4adc62 100644
  CONFIG_BUILD_OUTPUT_UF2=y
  
 -CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=y
-+#CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=n
++#CONFIG_ZMK_BLE_EXPERIMENTAL_FEATURES=y
  
  CONFIG_ZMK_BLE=y
  CONFIG_ZMK_USB=y
 diff --git config/boards/arm/adv360/board.cmake config/boards/arm/adv360/board.cmake
-index 292a274..62e049b 100644
+index 292a274..a5deada 100644
 --- config/boards/arm/adv360/board.cmake
 +++ config/boards/arm/adv360/board.cmake
-@@ -5,5 +5,4 @@
+@@ -5,5 +5,5 @@
  
  board_runner_args(nrfjprog "--nrf-family=NRF52" "--softreset")
  
 -include(${ZEPHYR_BASE}/boards/common/uf2.board.cmake)
++#include(${ZEPHYR_BASE}/boards/common/uf2.board.cmake)
  include(${ZEPHYR_BASE}/boards/common/nrfjprog.board.cmake)
 diff --git config/cust_behaviors.json config/cust_behaviors.json
 new file mode 100644
@@ -263,14 +264,16 @@ index bd3fa91..2be1c49 100644
    ]
  }
 diff --git config/west.yml config/west.yml
-index 9f3a48d..0a8ebde 100644
+index 9f3a48d..137ea40 100644
 --- config/west.yml
 +++ config/west.yml
-@@ -7,6 +7,7 @@ manifest:
+@@ -7,7 +7,8 @@ manifest:
    projects:
      - name: zmk
        remote: refil
-+      #revision: adv360-z3.2
-       revision: adv360-z3.5
+-      revision: adv360-z3.5
++      revision: adv360-z3.2
++      #revision: adv360-z3.5
        import: app/west.yml
    self:
+     path: config
