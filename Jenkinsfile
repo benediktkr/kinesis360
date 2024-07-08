@@ -29,12 +29,12 @@ pipeline {
                 }
             }
         }
-        stage('virtualenv') {
-            steps {
-                sh "python3 -m venv ${env.VENV}"
-                sh "pip install -U west"
-            }
-        }
+        //stage('virtualenv') {
+        //    steps {
+        //        sh "python3 -m venv ${env.VENV}"
+        //        sh "pip install -U west"
+        //    }
+        //}
         stage('make') {
             steps {
                 sh ".pipeline/build.sh"
