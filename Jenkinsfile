@@ -69,6 +69,9 @@ pipeline {
         cleanup {
             sh ".pipeline/clean.sh"
             cleanWs(deleteDirs: true, disableDeferredWipeout: true, notFailBuild: true)
+            dir(env.VENV) {
+                deleteDir()
+            }
        }
    }
 }
