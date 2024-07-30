@@ -12,6 +12,8 @@
 The repo forked [`KinesisCorporation/Adv360-Pro-ZMK`](https://github.com/KinesisCorporation/Adv360-Pro-ZMK)
 at 45fca6f6010b50cec3e7f8df4fe4af4bad1e470e.
 
+Web config tool: [Adv360-Pro-GUI](https://kinesiscorporation.github.io/Adv360-Pro-GUI)
+
 Manuals for Kinesis Advantage 360 Pro:
 
 - [Quick start guide](manuals/Advantage360-Professional-QSG-v11-21-23_for-Web.pdf)
