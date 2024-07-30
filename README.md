@@ -66,6 +66,9 @@ $ git checkout V3.0
 $ git pull upstream V3.0
 $ fork=45fca6f6010b50cec3e7f8df4fe4af4bad1e470e
 $ git diff $fork --no-prefix --patch -- config/ > data/upstream-changes-config.patch
+```
+
+```console
 $ git checkout main
 $ git diff V3.0 --no-prefix --patch -- config/ > data/diff-config.patch
 ```
