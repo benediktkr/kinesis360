@@ -12,6 +12,8 @@
 The repo forked [`KinesisCorporation/Adv360-Pro-ZMK`](https://github.com/KinesisCorporation/Adv360-Pro-ZMK)
 at 45fca6f6010b50cec3e7f8df4fe4af4bad1e470e.
 
+![The key positions on the Advantage 360](assets/key-positions.png)
+
 Web config tool: [Adv360-Pro-GUI](https://kinesiscorporation.github.io/Adv360-Pro-GUI)
 
 Manuals for Kinesis Advantage 360 Pro:
