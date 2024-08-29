@@ -63,7 +63,7 @@
       bindings = <
         &trans &trans &trans &trans &trans &trans   &trans                                                   &trans   &trans &trans &trans &trans &trans &trans
         &trans &trans &trans &trans &trans &trans   &trans                                                   &trans   &trans &trans &trans &trans &trans &trans
-        &trans &trans &trans &trans &trans &trans   &trans      &kp LCMD  &kp LALT   &sk RCTRL &sk LCMD      &trans   &trans &trans &trans &trans &trans &trans
+        &trans &trans &trans &trans &trans &trans   &trans      &sk LCMD  &sk LALT   &sk RCTRL &sk LCMD      &trans   &trans &trans &trans &trans &trans &trans
         &trans &trans &trans &trans &trans &trans                         &trans     &trans                           &trans &trans &trans &trans &trans &trans
         &trans &trans &trans &trans &trans                 &trans  &trans &trans     &trans  &trans  &trans                  &trans &trans &trans &trans &trans
       >;
