@@ -45,19 +45,23 @@ pipeline {
         //        }
         //    }
         //}
-
-    }
-    post {
-        success {
-            archiveArtifacts(
-                artifacts: "dist/firmware/Adv360-firmware_${env.VERSION}.tar.gz,dist/firmware/Adv360_firmware_${env.VERSION}.tar.gz.sha256.txt",
-                fingerprint: true
-            )
-            withCredentials([string(credentialsId: "gitea-user-ben-full-token", variable: 'GITEA_SECRET')]) {
-                sh 'curl -i -H "Authorization: token $GITEA_SECRET" --upload-file dist/firmware/Adv360-firmware_${VERSION}.tar.gz https://git.sudo.is/api/packages/ben/generic/kinesis360/${VERSION}/Adv360-firmware_${VERSION}.tar.gz'
-                // add -s -f to silence and fail on errors
+        stage('publish') {
+            when {
+                branch "main"
+            }
+            steps {
+                archiveArtifacts(
+                    artifacts: "dist/firmware/Adv360-firmware_${env.VERSION}.tar.gz,dist/firmware/Adv360_firmware_${env.VERSION}.tar.gz.sha256.txt",
+                    fingerprint: true
+                )
+                withCredentials([string(credentialsId: "gitea-user-ben-full-token", variable: 'GITEA_SECRET')]) {
+                    sh 'curl -i -H "Authorization: token $GITEA_SECRET" --upload-file dist/firmware/Adv360-firmware_${VERSION}.tar.gz https://git.sudo.is/api/packages/ben/generic/kinesis360/${VERSION}/Adv360-firmware_${VERSION}.tar.gz'
+                    // add -s -f to silence and fail on errors
+                }
             }
         }
+    }
+    post {
         always {
             sh "docker image ls"
         }
