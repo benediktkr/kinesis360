@@ -14,7 +14,9 @@ at 45fca6f6010b50cec3e7f8df4fe4af4bad1e470e.
 
 ![The key positions on the Advantage 360](assets/key-positions.png)
 
-Web config tool: [Adv360-Pro-GUI](https://kinesiscorporation.github.io/Adv360-Pro-GUI)
+Web config tools:
+- [Adv360-Pro-GUI](https://kinesiscorporation.github.io/Adv360-Pro-GUI)
+- [keymap-editor](https://nickcoutsos.github.io/keymap-editor/)
 
 Manuals for Kinesis Advantage 360 Pro:
 
@@ -89,6 +91,20 @@ $ make
 ```
 
 The `left.uf2` and `right.uf2` files are in a tarball `dist/firmware/Adv360-firmware_${VERSION}.tar.gz`.
+
+### Flash a build
+
+For each keyboard module:
+
+1. Connect with USB
+2. Put keyboard module into bootloader mode.
+   - Left module: `Mod` + `Hotkey 1` (or reset button between `Backsapce` and `Del`).
+   - Right module: `Mod` + `Hotkey 3` (or resett button between `Enter` and `Space`).
+3. Mount as USB mass storage.
+4. Copy `right.uf2` or `left.uf2`.
+5. Disconnect USB as keyboard module reboots.
+
+After flashing, use `Mod` + `V` to print the version of the flashed config.
 
 ## ZMK
 

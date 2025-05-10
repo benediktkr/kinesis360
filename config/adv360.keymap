@@ -9,8 +9,11 @@
 &sk {
   // default: 1000ms (1s)
   release-after-ms = <1000>;
-  // Activate stick key rightbefore the other key is pressed, prevents host
-  // from seeing anything during sticky-key timeout (useful for mouse
+  // Deactivates the sticky key on the next key being pressed, instead of
+  // being released.
+  quick-release;
+  // Activate sticky key right before the other key is pressed, prevents
+  // host from seeing anything during sticky-key timeout (useful for mouse
   // interactions)
   // NOTE: doesn't compile, ZMK might be too old for the feature.
   //lazy;
