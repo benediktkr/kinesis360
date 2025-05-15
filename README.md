@@ -12,7 +12,8 @@
 The repo forked [`KinesisCorporation/Adv360-Pro-ZMK`](https://github.com/KinesisCorporation/Adv360-Pro-ZMK)
 at 45fca6f6010b50cec3e7f8df4fe4af4bad1e470e.
 
-![The key positions on the Advantage 360](assets/key-positions.png)
+[![The key positions on the Advantage 360](assets/key-positions_m.png)](assets/key-positions.png)
+
 
 Web config tools:
 - [Adv360-Pro-GUI](https://kinesiscorporation.github.io/Adv360-Pro-GUI)
@@ -26,6 +27,40 @@ Manuals for Kinesis Advantage 360 Pro:
 - [Reset instructions](manuals/Advantage360-Professional-Settings-Reset-Instructions-11.22.23-KB360-PRO-GBR.pdf)
 
 See [`UPSTREAM.md`](UPSTREAM.md) for original `README.md` file.
+
+## Layout
+
+[![Base layer](assets/base_layer_m.png)](assets/base_layer.png)
+
+[![Mac layer](assets/mac_layer_s.png)](assets/mac_layer.png)
+[![Mod layer](assets/mod_layer_s.png)](assets/mod_layer.png)
+
+## Builds
+
+The default GitHub actions have been disabled and replaced with a [`Jenkinsfile`](Jenkinsfile)
+and the [`Dockerfile`](Dockerfile) has been rewritten and improved.
+
+To build the firmware:
+
+```console
+$ make
+```
+
+The `left.uf2` and `right.uf2` files are in a tarball `dist/firmware/Adv360-firmware_${VERSION}.tar.gz`.
+
+### Flash a build
+
+For each keyboard module:
+
+1. Connect with USB
+2. Put keyboard module into bootloader mode.
+   - Left module: `Mod` + `Hotkey 1` (or reset button between `Backsapce` and `Del`).
+   - Right module: `Mod` + `Hotkey 3` (or resett button between `Enter` and `Space`).
+3. Mount as USB mass storage.
+4. Copy `right.uf2` or `left.uf2`.
+5. Disconnect USB as keyboard module reboots.
+
+After flashing, use `Mod` + `V` to print the version of the flashed config.
 
 ## Git
 
@@ -78,33 +113,6 @@ $ git diff $fork --no-prefix --patch -- config/ > data/upstream-changes-config.p
 $ git checkout main
 $ git diff V3.0 --no-prefix --patch -- config/ > data/diff-config.patch
 ```
-
-## Builds
-
-The default GitHub actions have been disabled and replaced with a [`Jenkinsfile`](Jenkinsfile)
-and the [`Dockerfile`](Dockerfile) has been rewritten and improved.
-
-To build the firmware:
-
-```console
-$ make
-```
-
-The `left.uf2` and `right.uf2` files are in a tarball `dist/firmware/Adv360-firmware_${VERSION}.tar.gz`.
-
-### Flash a build
-
-For each keyboard module:
-
-1. Connect with USB
-2. Put keyboard module into bootloader mode.
-   - Left module: `Mod` + `Hotkey 1` (or reset button between `Backsapce` and `Del`).
-   - Right module: `Mod` + `Hotkey 3` (or resett button between `Enter` and `Space`).
-3. Mount as USB mass storage.
-4. Copy `right.uf2` or `left.uf2`.
-5. Disconnect USB as keyboard module reboots.
-
-After flashing, use `Mod` + `V` to print the version of the flashed config.
 
 ## ZMK
 
