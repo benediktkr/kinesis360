@@ -30,10 +30,6 @@ COPY bin/build.sh bin/version.py /usr/local/bin
 RUN set -x && \
     /usr/local/bin/build.sh
 
-COPY bin/entrypoint.sh /usr/local/bin/
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD []
-
 FROM scratch AS export
 COPY --from=builder /usr/local/src/dist .
 

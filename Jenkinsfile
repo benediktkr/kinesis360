@@ -51,7 +51,7 @@ pipeline {
             }
             steps {
                 archiveArtifacts(
-                    artifacts: "dist/firmware/Adv360-firmware_${env.VERSION}.tar.gz,dist/firmware/Adv360_firmware_${env.VERSION}.tar.gz.sha256.txt",
+                    artifacts: "dist/firmware/Adv360-firmware_${env.VERSION}.tar.gz,dist/firmware/Adv360_firmware_${env.VERSION}.txt",
                     fingerprint: true
                 )
                 withCredentials([string(credentialsId: "gitea-user-ben-full-token", variable: 'GITEA_SECRET')]) {

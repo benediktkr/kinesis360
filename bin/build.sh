@@ -39,9 +39,12 @@ tar czf \
     build/left/zephyr/zmk.uf2 \
     build/right/zephyr/zmk.uf2
 
-
 mkdir -p dist/firmware/${BUILD_NAME}
 cp build/left/zephyr/zmk.uf2  dist/firmware/${BUILD_NAME}/left.uf2
 cp build/right/zephyr/zmk.uf2 dist/firmware/${BUILD_NAME}/right.uf2
 
-sha256sum dist/firmware/${BUILD_NAME}.tar.gz > dist/firmware/${BUILD_NAME}.tar.gz.sha256.txt
+(
+    cd dist/firmware
+    md5sum ${BUILD_NAME}/left.uf2 ${BUILD_NAME}/right.uf2
+    md5sum ${BUILD_NAME}.tar.gz
+) > dist/firmware/${BUILD_NAME}.txt
