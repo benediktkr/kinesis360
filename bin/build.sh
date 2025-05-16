@@ -21,7 +21,7 @@ west build -s zmk/app -d build/left -b adv360_left -- -DZMK_CONFIG="$(pwd)/confi
 west build -s zmk/app -d build/right -b adv360_right -- -DZMK_CONFIG="$(pwd)/config"
 
 
-TARFILE="Adv360-firmware_${VERSION}.tar.gz"
+BUILD_NAME="Adv360-firmware_${VERSION}"
 # The 'west build' commands will build the files 'build/left/zephy.uf2'
 # and 'build/right/zephyr.uf2'.
 #
@@ -29,11 +29,15 @@ TARFILE="Adv360-firmware_${VERSION}.tar.gz"
 
 mkdir -p dist/firmware
 tar czf \
-    dist/firmware/${TARFILE} \
+    dist/firmware/${BUILD_NAME}.tar.gz \
     --transform='flags=r;s|build/left/zephyr/zmk.uf2|left.uf2|' \
     --transform='flags=r;s|build/right/zephyr/zmk.uf2|right.uf2|' \
     build/left/zephyr/zmk.uf2 \
     build/right/zephyr/zmk.uf2
 
 
-sha256sum dist/firmware/${TARFILE} > dist/firmware/${TARFILE}.sha256.txt
+mkdir -p dist/firmware/${BUILD_NAME}
+cp build/left/zephyr/zmk.uf2  dist/firmware/${BUILD_NAME}/left.uf2
+cp build/right/zephyr/zmk.uf2 dist/firmware/${BUILD_NAME}/right.uf2
+
+sha256sum dist/firmware/${BUILD_NAME}.tar.gz > dist/firmware/${BUILD_NAME}.tar.gz.sha256.txt

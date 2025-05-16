@@ -8,6 +8,7 @@ ARG USER_UID=1337
 ARG USER_GID=1337
 
 RUN set -xe && \
+    userdel --force --remove ubuntu 2>/dev/null && \
     groupadd -g ${USER_GID} user && \
     useradd -u ${USER_UID} -g ${USER_GID} -d /usr/local/src --system user && \
     chown -R user:user /usr/local/src
