@@ -7,6 +7,8 @@ manifest:
   projects:
     - name: zmk
       remote: refil
+      # The version 'z3.5' and 'z3.2' refers to the Zephyr version (not ZMK):
+      # https://zmk.dev/blog/2024/02/09/zephyr-3-5
       revision: adv360-z3.2
       #revision: adv360-z3.5
       import: app/west.yml
