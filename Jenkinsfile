@@ -32,7 +32,7 @@ pipeline {
         //}
         stage('make') {
             steps {
-                sh ".pipeline/build.sh"
+                sh "make firmware"
             }
         }
         //stage('keymap-editor-web') {
@@ -66,7 +66,7 @@ pipeline {
             sh "docker image ls"
         }
         cleanup {
-            //sh ".pipeline/clean.sh"
+            sh "make clean"
             cleanWs(deleteDirs: true, disableDeferredWipeout: true, notFailBuild: true)
             dir(env.VENV) {
                 deleteDir()

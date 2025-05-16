@@ -15,10 +15,6 @@ endif
 
 .PHONY: all firmware clean_firmware clean_image clean
 
-docker-userids:
-	@echo "UID: ${USER_UID}"
-	@echo "GID: ${USER_GID}"
-
 firmware:
 	@echo "Using uid=${USER_UID},gid=${USER_GID} and building with DOCKER=${DOCKER}"
 	$(DOCKER) buildx build \
@@ -45,3 +41,10 @@ clean_image:
 	$(DOCKER) image rm docker.io/zmkfirmware/zmk-build-arm:stable || true
 
 clean: clean_firmware clean_image
+
+docker-userids:
+	@echo "UID: ${USER_UID}"
+	@echo "GID: ${USER_GID}"
+
+
+
