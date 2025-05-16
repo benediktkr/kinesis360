@@ -22,8 +22,9 @@ west build -s zmk/app -d build/right -b adv360_right -- -DZMK_CONFIG="$(pwd)/con
 
 
 BUILD_NAME="Adv360-firmware_${VERSION}"
-# The 'west build' commands will build the files 'build/left/zephy.uf2'
-# and 'build/right/zephyr.uf2'.
+# The 'west build' commands will build the files:
+#  - 'build/left/zephyr/zmk.uf2'
+#  - 'build/right/zephyr/zmk.uf2'
 #
 # In the .tar.gz file we have renamed these files to 'left.uf2' and 'right.uf2'.
 
