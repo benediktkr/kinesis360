@@ -6,7 +6,7 @@ config BOARD_ENABLE_DCDC
     default y
     depends on BOARD_ADV360_LEFT || BOARD_ADV360_RIGHT
 
-config ZMK_BATTERY_REPORTING
-    bool "Enable battery reporting"
-    default y
-    depends on BOARD_ADV360_LEFT || BOARD_ADV360_RIGHT
+#config ZMK_BATTERY_REPORTING
+#    bool "Enable battery reporting"
+#    default y
+#    depends on BOARD_ADV360_LEFT || BOARD_ADV360_RIGHT
