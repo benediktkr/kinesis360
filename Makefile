@@ -16,11 +16,11 @@ endif
 .PHONY: all firmware clean_firmware clean_image clean
 
 docker-userids:
-	echo "UID: ${USER_UID}"
-	echo "GID: ${USER_GID}"
+	@echo "UID: ${USER_UID}"
+	@echo "GID: ${USER_GID}"
 
 firmware:
-	echo "Using uid=${USER_UID},gid=${USER_GID} and building with DOCKER=${DOCKER}"
+	@echo "Using uid=${USER_UID},gid=${USER_GID} and building with DOCKER=${DOCKER}"
 	$(DOCKER) buildx build \
 		 --pull \
 		 --progress plain \
@@ -30,6 +30,8 @@ firmware:
 		 --build-arg "USER_UID=${USER_UID}" \
 		 --build-arg "USER_GID=${USER_GID}" \
 		 -t zmk:latest .
+	@echo
+	@echo "Successful build: Adv360-firmware_${VERSION}"
 
 all: firmware
 
