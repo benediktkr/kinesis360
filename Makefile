@@ -19,7 +19,7 @@ docker-userids:
 	echo "UID: ${USER_UID}"
 	echo "GID: ${USER_GID}"
 
-firmware: clean_firmware
+firmware:
 	echo "Using uid=${USER_UID},gid=${USER_GID} and building with DOCKER=${DOCKER}"
 	$(DOCKER) buildx build \
 		 --pull \
