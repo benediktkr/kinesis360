@@ -17,9 +17,12 @@ set -x
 /usr/local/bin/version.py --version-macro > $(pwd)/config/version.dtsi
 cat $(pwd)/config/version.dtsi
 
+# Using '-p' forces 'west build' to make the build directory "pristine" before
+# re-running cmake to generate a build system.
+# This option is used the the upstream build script using docker, but not in the
+# GitHub pipeline.
 west build -s zmk/app -d build/left -b adv360_left -- -DZMK_CONFIG="$(pwd)/config"
 west build -s zmk/app -d build/right -b adv360_right -- -DZMK_CONFIG="$(pwd)/config"
-
 
 BUILD_NAME="Adv360-firmware_${VERSION}"
 # The 'west build' commands will build the files:
